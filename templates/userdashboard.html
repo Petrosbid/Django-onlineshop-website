@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head><script type="text/javascript" src="/___vscode_livepreview_injected_script"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد کاربری | فروشگاه لوازم جانبی موبایل</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://v1.fontapi.ir/css/Vazir" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h3>سلام، کاربر عزیز</h3>
+            </div>
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="active"><a href="#"><i class="fas fa-home"></i>  سفارش‌های من</a></li>
+                    <li><a href="userdashboard_account-specs.html"><i class="fas fa-address-card"></i>  مشخصات</a></li>
+                    <li><a href="#"><i class="fas fa-sign-out-alt"></i> خروج</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <i class="fas fa-box"></i>
+                    <div class="stat-info">
+                        <h4>سفارش‌های فعال</h4>
+                        <p>3 سفارش</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-wallet"></i>
+                    <div class="stat-info">
+                        <h4>اعتبار کیف پول</h4>
+                        <p>۲۵۰,۰۰۰ تومان</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-star"></i>
+                    <div class="stat-info">
+                        <h4>امتیازات</h4>
+                        <p>۱,۲۵۰ امتیاز</p>
+                    </div>
+                </div>
+            </div>
+
+            <section class="recent-orders">
+                <h2>سفارش‌های اخیر</h2>
+                <div class="orders-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>شماره سفارش</th>
+                                <th>تاریخ</th>
+                                <th>مبلغ</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#12345</td>
+                                <td>۱۴۰۴/۰۲/۰</td>
+                                <td>۱,۲۵۰,۰۰۰ تومان</td>
+                                <td><span class="status pending">در انتظار پرداخت</span></td>
+                                <td><button class="btn-details" onclick="window.location.href='userdashboard_order-details.html'">جزئیات</button></td>
+                            </tr>
+                            <tr>
+                                <td>#12344</td>
+                                <td>۱۴۰۴/۰۲/۰</td>
+                                <td>۸۵۰,۰۰۰ تومان</td>
+                                <td><span class="status processing">در حال پردازش</span></td>
+                                <td><button class="btn-details" onclick="window.location.href='userdashboard_order-details.html'">جزئیات</button></td>
+                            </tr>
+                            <tr>
+                                <td>#12343</td>
+                                <td>۱۴۰۴/۰۲/۰</td>
+                                <td>۲,۵۰۰,۰۰۰ تومان</td>
+                                <td><span class="status completed">تکمیل شده</span></td>
+                                <td><button class="btn-details" onclick="window.location.href='userdashboard_order-details.html'">جزئیات</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="../javascript/dashboard.js"></script>
+</body>
+</html>

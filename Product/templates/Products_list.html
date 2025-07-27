@@ -1,0 +1,91 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}فروشگاه محصولات | Volix{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/Products_list.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <div class="header-top">
+            <div class="header-top-right">
+                <h2>VOLIX</h2>
+                <form action="" method="get">
+                    <input type="text" name="q" placeholder="جستجو محصول">
+                    <button type="submit">جستجو محصول</button>
+                </form>
+            </div>
+            <div class="header-top-left">
+                <div>
+                    <a href="{% url 'login' %}" class="active">
+                        <span>ورود / ثبت نام</span>
+                        <i class="bi bi-box-arrow-in-left"></i>
+                    </a>
+                </div>
+                <div class="icon">
+                    <a href="{% url 'cart' %}">
+                        <i class="bi bi-cart2" style="font-size: 25px; color: black;"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="header-buttom">
+            <div>
+                <input type="checkbox" id="toggle-nav" hidden>
+                <label for="toggle-nav" class="label-toggle-nav">
+                    <span class="line line-top"></span>
+                    <span class="line line-mid"></span>
+                    <span class="line line-buttom"></span>
+                </label>
+            </div>
+            <div>دسته بندی محصولات</div>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="section-all">
+        <div class="section-all-top">
+            <div class="products-grid">
+                {% for product in products %}
+                <div class="grid-product">
+                    <a href="{% url 'product_detail' product.id %}">
+                        <div class="item-grid-product">
+                            <div class="img-product">
+                                {% if product.images.all %}
+                                    <img src="{{ product.images.all.0.image.url }}" alt="{{ product.title }}">
+                                {% else %}
+                                    <img src="{% static 'images/default.jpg' %}" alt="بدون تصویر">
+                                {% endif %}
+                            </div>
+                            <div class="caption-item-product">
+                                <h5 class="title-product">{{ product.title }}</h5>
+                                <div class="product-category">{{ product.category.name }}</div>
+                                <div class="product-price">
+                                    <span class="current-price">{{ product.price|intcomma }} تومان</span>
+                                    {% if product.original_price %}
+                                        <span class="original-price">{{ product.original_price|intcomma }} تومان</span>
+                                    {% endif %}
+                                    {% if product.discount_percent %}
+                                        <span class="discount-badge">{{ product.discount_percent }}٪ تخفیف</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% empty %}
+                <div>محصولی یافت نشد.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'javascript/search-filter.js' %}"></script>
+{% endblock %}

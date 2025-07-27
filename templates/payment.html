@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>پرداخت اینترنتی</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+    body {
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      background: #fff;
+      margin: 50px auto;
+      display: flex;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .form-section {
+      flex: 2;
+      padding: 30px;
+    }
+    .info-section {
+      flex: 1;
+      background-color: #f0f0f0;
+      padding: 30px;
+      font-size: 14px;
+    }
+    h1 {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input[type="text"],
+    input[type="email"],
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+    .captcha {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-pay {
+      background-color: #00c17b;
+      color: white;
+    }
+    .btn-cancel {
+      background-color: #ffcc00;
+    }
+    .timer {
+      text-align: left;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="form-section">
+      <div class="timer">زمان باقی‌مانده: <span id="timer">20:00</span></div>
+      <label>شماره کارت</label>
+      <input type="text" placeholder="**** **** **** ****">
+
+      <label>رمز اینترنتی کارت</label>
+      <input type="text" placeholder="****">
+
+      <label>شماره شناسایی دوم (CVV2)</label>
+      <input type="text" placeholder="***">
+
+      <div class="row">
+        <div style="flex: 1">
+          <label>ماه</label>
+          <select><option>01</option><option>02</option><option>03</option></select>
+        </div>
+        <div style="flex: 1">
+          <label>سال</label>
+          <select><option>1403</option><option>1404</option></select>
+        </div>
+      </div>
+
+      <label>کد امنیتی</label>
+      <div class="captcha">
+        <img src="https://dummyimage.com/100x40/ccc/000&text=74056" alt="captcha">
+        <input type="text" placeholder="کد بالا را وارد کنید">
+      </div>
+
+      <label>ایمیل</label>
+      <input type="email" placeholder="example@email.com">
+
+      <div class="buttons">
+        <button class="btn btn-cancel">انصراف</button>
+        <button class="btn btn-pay">پرداخت</button>
+      </div>
+    </div>
+    <div class="info-section">
+      <h1>اطلاعات کارت</h1>
+      <p>شماره کارت باید 16 رقمی باشد</p>
+      <p>رمز اینترنتی را از بانک دریافت کنید</p>
+      <p>CVV2 معمولاً پشت کارت درج شده</p>
+      <p>تاریخ انقضا را مطابق کارت وارد کنید</p>
+      <p>کد امنیتی برای حفظ امنیت پرداخت است</p>
+      <p>ایمیل برای ارسال رسید</p>
+    </div>
+  </div>
+
+  <script>
+    // شمارش معکوس زمان
+    let duration = 20 * 60;
+    const timerEl = document.getElementById("timer");
+    setInterval(() => {
+      const minutes = String(Math.floor(duration / 60)).padStart(2, '0');
+      const seconds = String(duration % 60).padStart(2, '0');
+      timerEl.textContent = `${minutes}:${seconds}`;
+      if (duration > 0) duration--;
+    }, 1000);
+  </script>
+</body>
+</html>
