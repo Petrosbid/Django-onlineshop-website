@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Volix-خرید موبایل">
+        <link rel="stylesheet" href="{% static 'css/header_persian.css' %}">
+        <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+        <title>{% block title %}Volix-خرید موبایل{% endblock %}</title>
+        
+
+        <!-- Page Specific CSS -->
+        {% block extra_css %}{% endblock %}
+        
+        <!-- Page Specific JS -->
+        {% block extra_js %}{% endblock %}
+    </head>
+    <body>
+        {% include 'base/header_persian.html' %}
+        
+        <div class="page-container" style="width: 100%">
+            {% block content %}{% endblock %}
+        </div>
+        
+        {% include 'base/footer.html' %}
+    </body>
+</html> 
