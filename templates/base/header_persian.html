@@ -1,30 +1,47 @@
 {% load static %}
-<div class="circle-1"></div>
-<header class="header">
-  <div class="header-container">
-      <div class="logo">
-          <a href="MainPage.html">Volix</a>
-      </div>
-      <nav class="nav">
-          <ul>
-              <li><a href="MainPage.html">صفحه اصلی</a></li>
-              <li><a href="Products_list.html">فروشگاه</a></li>
-              <li><a href="userdashboard.html">حساب کاربری</a></li>
-              <li><a href="contactUs.html">ارتباط با ما</a></li>
-          </ul>
-      </nav>
-      <div class="header-actions">
-          <div class="search-box">
-              <input type="text" placeholder="جستجو در محصولات...">
-              <i class="fas fa-search"></i>
-          </div>
-          <div class="cart-icon">
-              <i class="fas fa-shopping-cart"></i>
-              <span class="cart-count">3</span>
-          </div>
-          <div class="user-icon">
-              <i class="fas fa-user"></i>
-          </div>
-      </div>
-  </div>
-</header>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="{% url 'index' %}">Volix</a>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="{% url 'index' %}">صفحه اصلی</a></li>
+                    <li><a href="{% url 'Product:Show_products' %}">فروشگاه</a></li>
+                    <li><a href="{% url 'contact' %}">ارتباط با ما</a></li>
+                    <li><a href="{% url 'about' %}">درباره ما</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <div class="search-box">
+                    <input type="text" placeholder="جستجو در محصولات...">
+                    <i class="fas fa-search"></i>
+                </div>
+
+                <div class="user-section">
+                    {% if user.is_authenticated %}
+                        <div class="cart-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count">3</span>
+                        </div>
+                        <div class="user-menu">
+                            <div class="user-info">
+                                <i class="fas fa-user"></i>
+                                <span>{{ user.first_name|default:user.username }}</span>
+                            </div>
+                            <div class="user-dropdown">
+                                <a href="{% url 'userdashboard' %}">پنل کاربری</a>
+                                <a href="{% url 'logout' %}">خروج</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="auth-buttons">
+                            <a href="{% url 'login' %}" class="login-btn">ورود</a>
+                            <a href="{% url 'signup' %}" class="signup-btn">ثبت نام</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>

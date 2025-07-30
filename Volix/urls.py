@@ -18,6 +18,8 @@ Including another URLconf
 from django.urls import path , include
 from . import views
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -26,6 +28,10 @@ urlpatterns = [
     path('about/' , views.about , name='about'),
     path('contact/' , views.contact , name='contact'),
 
-    path('Product/', include(('Product.urls', 'Product'), namespace='Product')),
+    path('Product/', include(('Product.urls', 'Product'), namespace='product')),
     path('', include(('Product.urls', 'product_list'), namespace='Product')),
-]
+    path('login/' , views.loginuser , name='login'),
+    path('logout/' , views.logoutuser , name='logout'),
+    path('signup/', views.signupuser , name='signup'),
+    path('userdashboard/',views.userdashboard , name='userdashboard'),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

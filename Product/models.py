@@ -37,7 +37,7 @@ class ProductImage(models.Model):
 class ColorOption(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='colors')
     color_name = models.CharField(max_length=50)
-    color_code = models.CharField(max_length=7, help_text="Hex code, e.g. #000000")
+    color_code = models.CharField(max_length=7, help_text="Hex code, e.g. #000000" , null=True , blank=True)
 
     def __str__(self):
         return f"{self.product.title} - {self.color_name}"
@@ -51,21 +51,3 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.reviewer_name} - {self.product.title}"
-
-class RelatedProduct(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='related_products')
-    related = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='is_related_to')
-
-    def __str__(self):
-        return f"{self.product.title} related to {self.related.title}"
-
-class ShippingInfo(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE, related_name='shipping_info')
-    tehran_time = models.CharField(max_length=100)
-    other_cities_time = models.CharField(max_length=100)
-    free_shipping_threshold = models.PositiveIntegerField()
-    shipping_cost = models.PositiveIntegerField()
-    return_policy = models.TextField()
-
-    def __str__(self):
-        return f"Shipping info for {self.product.title}"

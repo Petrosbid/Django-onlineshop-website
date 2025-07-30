@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head><script type="text/javascript" src="/___vscode_livepreview_injected_script"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>داشبورد کاربری | فروشگاه لوازم جانبی موبایل</title>
-    <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://v1.fontapi.ir/css/Vazir" rel="stylesheet">
-</head>
-<body>
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}داشبورد کاربری | فروشگاه لوازم جانبی موبایل{% endblock %}
+{% block extra_css %}
+        <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+{% block content %}
     <div class="dashboard-container">
         <aside class="sidebar">
             <div class="user-info">
@@ -93,6 +90,10 @@
             </section>
         </main>
     </div>
-    <script src="../javascript/dashboard.js"></script>
-</body>
-</html>
+
+
+    {% block extra_js %}
+        <script src="{% static 'javascript/dashboard.js' %}"></script>
+        <script type="text/javascript" src="/___vscode_livepreview_injected_script"></script>
+    {% endblock %}
+{% endblock %}
