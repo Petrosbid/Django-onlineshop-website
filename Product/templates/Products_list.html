@@ -327,7 +327,7 @@
                         <div class="product-rating">
                             <div class="stars">
                                 <div class="stars">
-                                {% with avg_rating=product.reviews.rating|length|default:0 %}
+                                {% with avg_rating=product.reviews.all|length|default:0 %}
                                     {% if avg_rating > 0 %}
                                         {% for i in "12345" %}
                                             {% if forloop.counter <= avg_rating %}
@@ -337,11 +337,11 @@
                                             {% endif %}
                                         {% endfor %}
                                     {% else %}
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
                                     {% endif %}
                                 {% endwith %}
                                 </div>
@@ -357,9 +357,9 @@
                         </div>
                         
                         <div class="product-actions">
-                            <button class="add-to-cart-btn" onclick="addToCart({{ product.id }})">
-                                <i class="fas fa-shopping-cart"></i>
-                                اضافه کردن به سبد خرید
+                            <button class="add-to-cart-btn" onclick="window.location.href='/Product/{{ product.id }}'">
+                                <i class="fas fa-eye"></i>
+                                مشاهده محصول
                             </button>
                         </div>
                     </div>
@@ -403,20 +403,7 @@
     </div>
 </div>
 
-<!-- Quick View Modal -->
-<div class="quick-view-modal" id="quickViewModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>نمایش سریع محصول</h3>
-            <button class="close-modal" onclick="closeQuickView()">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="modal-body" id="quickViewContent">
-            <!-- Quick view content will be loaded here -->
-        </div>
-    </div>
-</div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -456,7 +443,7 @@ function showTooltip(event) {
     tooltip.className = 'tooltip';
     tooltip.textContent = event.target.dataset.tooltip;
     document.body.appendChild(tooltip);
-    
+
     const rect = event.target.getBoundingClientRect();
     tooltip.style.left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2) + 'px';
     tooltip.style.top = rect.top - tooltip.offsetHeight - 5 + 'px';
@@ -468,26 +455,5 @@ function hideTooltip() {
         tooltip.remove();
     }
 }
-
-function quickView(productId) {
-    // Implement quick view functionality
-    console.log('Quick view for product:', productId);
-    document.getElementById('quickViewModal').style.display = 'flex';
-}
-
-
-function addToCart(productId) {
-    // Implement add to cart functionality
-    console.log('Add to cart:', productId);
-    showNotification('محصول به سبد خرید اضافه شد', 'success');
-}
-
-// Close modal when clicking outside
-window.addEventListener('click', function(event) {
-    const modal = document.getElementById('quickViewModal');
-    if (event.target === modal) {
-        closeQuickView();
-    }
-});
 </script>
 {% endblock %}

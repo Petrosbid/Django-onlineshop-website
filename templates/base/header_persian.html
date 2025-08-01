@@ -15,8 +15,12 @@
             </nav>
             <div class="header-actions">
                 <div class="search-box">
-                    <input type="text" placeholder="جستجو در محصولات...">
-                    <i class="fas fa-search"></i>
+                    <form action="/Product/" method="get" style="display: flex;">
+                        <input type="text" name="search" placeholder="جستجو در محصولات...">
+                        <button type="submit" style="background: none; border: none;">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
                 </div>
 
                 <div class="user-section">
