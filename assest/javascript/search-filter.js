@@ -1,8 +1,7 @@
-// Search and Filter Functionality for Products List Page
+// Enhanced Search and Filter Functionality for Products List Page
+// Updated to work with Django backend API
 
 // Global variables
-let allProducts = [];
-let filteredProducts = [];
 let currentFilters = {
     search: '',
     category: '',
@@ -15,229 +14,45 @@ let currentFilters = {
     discounts: []
 };
 
-// Product data structure (sample data based on the HTML)
-const productData = [
-    {
-        id: 1,
-        name: 'S25 Ultra',
-        category: 'mobile',
-        brand: 'samsung',
-        price: 102490000,
-        description: 'گوشی موبایل سامسونگ مدل گلکسی S25 Ultra ظرفیت 256 گیگابایت رم 12 گیگابایت - ویتنام',
-        image: '../images/s25-2.jpg',
-        colors: ['black', 'blue'],
-        inStock: true,
-        rating: 4.5,
-        discount: 0
-    },
-    {
-        id: 2,
-        name: '16Pro Max',
-        category: 'mobile',
-        brand: 'apple',
-        price: 142300000,
-        description: 'گوشی موبایل اپل مدل Iphone 16 Pro Max ظرفیت 256 گیگابایت رم 8 گیگابایت - ویتنام',
-        image: '../images/16pro-3.jpg',
-        colors: ['black', 'white'],
-        inStock: true,
-        rating: 4.8,
-        discount: 5
-    },
-    {
-        id: 3,
-        name: 'Xiaomi 15 pro',
-        category: 'mobile',
-        brand: 'xiaomi',
-        price: 72000000,
-        description: 'گوشی موبایل شیائومی مدل Xiaomi 15 pro ظرفیت 256 گیگابایت رم 12 گیگابایت - ویتنام',
-        image: '../images/xiaomi 15pr-4.jpg',
-        colors: ['black', 'red'],
-        inStock: true,
-        rating: 4.2,
-        discount: 15
-    },
-    {
-        id: 4,
-        name: 'Nokia Magic Max 5G',
-        category: 'mobile',
-        brand: 'nokia',
-        price: 22453000,
-        description: 'گوشی موبایل شیائومی مدل Nokia Magic Max 5G ظرفیت 256 گیگابایت رم 12 گیگابایت - ویتنام',
-        image: '../images/nokia-4.jpg',
-        colors: ['blue', 'green'],
-        inStock: false,
-        rating: 3.8,
-        discount: 25
-    },
-    {
-        id: 5,
-        name: 'Apple Airpods 4',
-        category: 'headphone',
-        brand: 'apple',
-        price: 13500000,
-        description: 'ایرپاد 4 اپل با قابلیت active noise cancellation Airpods 4 with Active Noise Cancellation',
-        image: '../images/airpadpro-2.jpg',
-        colors: ['white'],
-        inStock: true,
-        rating: 4.6,
-        discount: 0
-    },
-    {
-        id: 6,
-        name: 'Galaxy Buds 3 pro',
-        category: 'headphone',
-        brand: 'samsung',
-        price: 8619000,
-        description: 'هندزفری بلوتوثی سامسونگ مدل Galaxy Buds 3 pro Samsung Galaxy Buds 3 pro Bluetooth Earbuds',
-        image: '../images/buds3pro-1.jpg',
-        colors: ['black', 'white'],
-        inStock: true,
-        rating: 4.3,
-        discount: 10
-    },
-    {
-        id: 7,
-        name: 'Flip Buds pro TWSEJ20GT',
-        category: 'headphone',
-        brand: 'xiaomi',
-        price: 9899000,
-        description: 'هندزفری شیائومی مدل Flip Buds pro TWSEJ20GT Xiaomi Flip Buds pro TWSEJ20GT Bluetooth',
-        image: '../images/flipbudspro-1.jpg',
-        colors: ['black'],
-        inStock: true,
-        rating: 4.1,
-        discount: 20
-    },
-    {
-        id: 8,
-        name: 'T13 ANC 2',
-        category: 'headphone',
-        brand: 'qcy',
-        price: 1289000,
-        description: 'هندزفری بلوتوثی کیو سی وای مدل T13 ANC 2 QCY T13 ANC 2 Bluetooth Earphons',
-        image: '../images/t13anc2-1.jpg',
-        colors: ['black', 'blue'],
-        inStock: false,
-        rating: 3.9,
-        discount: 30
-    },
-    {
-        id: 9,
-        name: 'Galaxy Watch6 44mm',
-        category: 'watch',
-        brand: 'samsung',
-        price: 12290000,
-        description: 'ساعت هوشمند سامسونگ مدل Galaxy Watch6 44mm Samsung Galaxy Watch6 44mm Smart Watch',
-        image: '../images/watch644mm-4.jpg',
-        colors: ['black', 'blue'],
-        inStock: true,
-        rating: 4.4,
-        discount: 0
-    },
-    {
-        id: 10,
-        name: 'Ultra 49mm loop',
-        category: 'watch',
-        brand: 'apple',
-        price: 49900000,
-        description: 'ساعت هوشمند اپل مدل Ultra 49mm loop Iphone Watch Ultra 49mm Alpine loop',
-        image: '../images/watch49mmloop-1.jpg',
-        colors: ['black'],
-        inStock: true,
-        rating: 4.7,
-        discount: 0
-    },
-    {
-        id: 11,
-        name: 'Solar Pro',
-        category: 'watch',
-        brand: 'haylou',
-        price: 4390000,
-        description: 'ساعت هوشمند هایلو مدل Solar Pro Alpine Haylou Solar Pro Alpine Smart Watch',
-        image: '../images/solarpro-2.jpg',
-        colors: ['black', 'blue'],
-        inStock: true,
-        rating: 4.0,
-        discount: 15
-    },
-    {
-        id: 12,
-        name: 'GS Pro',
-        category: 'watch',
-        brand: 'mibro',
-        price: 6500000,
-        description: 'ساعت هوشمند میبرو مدل GS Pro Alpine Mibro Watch GS Pro Alpine Smart Watch',
-        image: '../images/gspro-1.jpg',
-        colors: ['black'],
-        inStock: false,
-        rating: 3.7,
-        discount: 20
-    },
-    {
-        id: 13,
-        name: 'MacBook Air MW123 M4',
-        category: 'laptop',
-        brand: 'apple',
-        price: 805000000,
-        description: 'لبتاپ اپل 13.6 اینچی مدل MacBook Air MW123 M4 MacBook Air MW123 M4 2025 16GB RAM 256GB SSD',
-        image: '../images/macbook-1.webp',
-        colors: ['white'],
-        inStock: true,
-        rating: 4.8,
-        discount: 0
-    },
-    {
-        id: 14,
-        name: 'Surface Studio-i7',
-        category: 'laptop',
-        brand: 'microsoft',
-        price: 88700000,
-        description: 'لبتاپ 14.4 اینچی مایکروسافت Surface Studio-(i7-32GB-1TB) Microsoft Surface Laptop Studio(i7-32GB-1TB)',
-        image: '../images/surfacestudio-2.webp',
-        colors: ['black'],
-        inStock: true,
-        rating: 4.5,
-        discount: 5
-    },
-    {
-        id: 15,
-        name: 'Legion Pro 5 2024',
-        category: 'laptop',
-        brand: 'lenovo',
-        price: 63319000,
-        description: 'لبتاپ لنوو Legion Pro 5 2024-BB 14650HX i7 64GB 1TB SSD Lenovo Legion Pro 5 2024-BB 14650HX i7 64GB 1TB SSD',
-        image: '../images/lenovo-1.webp',
-        colors: ['black'],
-        inStock: true,
-        rating: 4.3,
-        discount: 10
-    },
-    {
-        id: 16,
-        name: 'ROG Strix G18 G814JI',
-        category: 'laptop',
-        brand: 'asus',
-        price: 76129000,
-        description: 'لبتاپ ایسوس ROG Strix G18 G814JI-C 13650HX i7 16GB 2TB SSD ASUS ROG Strix G18 G814JI-C 13650HX i7 16GB 2TB SSD',
-        image: '../images/asus-1.webp',
-        colors: ['black'],
-        inStock: false,
-        rating: 4.2,
-        discount: 15
-    }
-];
+let isLoading = false;
+let currentPage = 1;
+let totalPages = 1; // Initialize totalPages
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
     initializeSearchFilter();
     setupEventListeners();
-    loadAllProducts();
+    setupKeyboardShortcuts();
+    initializeAnimations();
+    loadFilterOptions();
 });
 
 // Initialize search and filter functionality
 function initializeSearchFilter() {
-    allProducts = [...productData];
-    filteredProducts = [...allProducts];
+    // Get initial filter values from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    currentFilters.search = urlParams.get('search') || '';
+    currentFilters.category = urlParams.get('category') || '';
+    currentFilters.brand = urlParams.get('brand') || '';
+    currentFilters.priceRange = urlParams.get('price_range') || '';
+    currentFilters.sortBy = urlParams.get('sort') || '';
+    
+    // Set form values
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.value = currentFilters.search;
+    
+    const categoryFilter = document.getElementById('categoryFilter');
+    if (categoryFilter) categoryFilter.value = currentFilters.category;
+    
+    const brandFilter = document.getElementById('brandFilter');
+    if (brandFilter) brandFilter.value = currentFilters.brand;
+    
+    const priceFilter = document.getElementById('priceFilter');
+    if (priceFilter) priceFilter.value = currentFilters.priceRange;
+    
+    const sortFilter = document.getElementById('sortFilter');
+    if (sortFilter) sortFilter.value = currentFilters.sortBy;
+    
     updateResultsCount();
     updateActiveFilters();
 }
@@ -252,26 +67,182 @@ function setupEventListeners() {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
                 currentFilters.search = this.value;
+                currentPage = 1; // Reset to first page
                 applyFilters();
-            }, 300);
+            }, 500);
+        });
+        
+        // Enter key in search
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        // Focus effects
+        searchInput.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        searchInput.addEventListener('blur', function() {
+            this.parentElement.classList.remove('focused');
         });
     }
 
-    // Enter key in search
-    searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            performSearch();
+    // Filter change events
+    const filterElements = document.querySelectorAll('.filter-select, .color-option input, .stock-option input, .rating-option input, .discount-option input');
+    filterElements.forEach(element => {
+        element.addEventListener('change', function() {
+            currentPage = 1; // Reset to first page
+            applyFilters();
+        });
+    });
+
+    // Setup infinite scroll or pagination
+    setupPagination();
+}
+
+// Setup keyboard shortcuts
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', function(e) {
+        // Ctrl/Cmd + K to focus search
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.focus();
+                searchInput.select();
+            }
+        }
+        
+        // Escape to clear filters
+        if (e.key === 'Escape') {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput && document.activeElement === searchInput) {
+                searchInput.value = '';
+                currentFilters.search = '';
+                currentPage = 1;
+                applyFilters();
+            }
         }
     });
 }
 
-// Load all products (simulate API call)
-function loadAllProducts() {
-    // In a real application, this would be an API call
-    console.log('Loading products...');
-    setTimeout(() => {
-        applyFilters();
-    }, 100);
+// Initialize animations
+function initializeAnimations() {
+    // Add intersection observer for fade-in animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in');
+            }
+        });
+    }, observerOptions);
+
+    // Observe product cards
+    const productCards = document.querySelectorAll('.grid-cart');
+    productCards.forEach(card => {
+        observer.observe(card);
+    });
+}
+
+// Load filter options from backend
+function loadFilterOptions() {
+    fetch('/Product/api/filter-options/')
+        .then(response => response.json())
+        .then(data => {
+            populateFilterOptions(data);
+        })
+        .catch(error => {
+            console.error('Error loading filter options:', error);
+        });
+}
+
+// Populate filter options
+function populateFilterOptions(data) {
+    // Populate category filter
+    const categoryFilter = document.getElementById('categoryFilter');
+    if (categoryFilter && data.categories) {
+        categoryFilter.innerHTML = '<option value="">همه دسته‌ها</option>';
+        data.categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.name;
+            option.textContent = category.name;
+            categoryFilter.appendChild(option);
+        });
+    }
+    
+    // Populate brand filter
+    const brandFilter = document.getElementById('brandFilter');
+    if (brandFilter && data.brands) {
+        brandFilter.innerHTML = '<option value="">همه برندها</option>';
+        data.brands.forEach(brand => {
+            if (brand) {
+                const option = document.createElement('option');
+                option.value = brand;
+                option.textContent = brand;
+                brandFilter.appendChild(option);
+            }
+        });
+    }
+    
+    // Populate color options
+    if (data.colors) {
+        const colorOptions = document.querySelector('.color-options');
+        if (colorOptions) {
+            colorOptions.innerHTML = '';
+            data.colors.forEach(color => {
+                if (color) {
+                    const colorOption = document.createElement('label');
+                    colorOption.className = 'color-option';
+                    colorOption.innerHTML = `
+                        <input type="checkbox" value="${color}" onchange="applyFilters()">
+                        <span class="color-swatch" style="background-color: ${getColorCode(color)};"></span>
+                        ${color}
+                    `;
+                    colorOptions.appendChild(colorOption);
+                }
+            });
+        }
+    }
+}
+
+// Get color code for display
+function getColorCode(colorName) {
+    const colorMap = {
+        'black': '#000000',
+        'white': '#ffffff',
+        'blue': '#007bff',
+        'red': '#dc3545',
+        'green': '#28a745',
+        'yellow': '#ffc107',
+        'purple': '#6f42c1',
+        'orange': '#fd7e14',
+        'pink': '#e83e8c',
+        'gray': '#6c757d'
+    };
+    return colorMap[colorName.toLowerCase()] || '#cccccc';
+}
+
+// Setup pagination
+function setupPagination() {
+    // Infinite scroll or pagination buttons
+    const productsGrid = document.getElementById('productsGrid');
+    if (productsGrid) {
+        // Add scroll event for infinite scroll
+        window.addEventListener('scroll', function() {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000) {
+                if (!isLoading && currentPage < totalPages) {
+                    loadMoreProducts();
+                }
+            }
+        });
+    }
 }
 
 // Perform search
@@ -279,95 +250,122 @@ function performSearch() {
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
         currentFilters.search = searchInput.value;
+        currentPage = 1;
         applyFilters();
+        
+        // Add search animation
+        const searchBtn = document.querySelector('.search-btn');
+        if (searchBtn) {
+            searchBtn.classList.add('searching');
+            setTimeout(() => {
+                searchBtn.classList.remove('searching');
+            }, 1000);
+        }
     }
 }
 
-// Apply all filters
+// Apply all filters with backend API
 function applyFilters() {
-    // Get filter values
-    currentFilters.category = document.getElementById('categoryFilter').value;
-    currentFilters.brand = document.getElementById('brandFilter').value;
-    currentFilters.priceRange = document.getElementById('priceFilter').value;
-    currentFilters.sortBy = document.getElementById('sortFilter').value;
+    if (isLoading) return;
     
-    // Get advanced filter values
-    currentFilters.colors = getSelectedColors();
-    currentFilters.stockStatus = getSelectedStockStatus();
-    currentFilters.ratings = getSelectedRatings();
-    currentFilters.discounts = getSelectedDiscounts();
+    isLoading = true;
+    
+    // Show loading state
+    const productsGrid = document.getElementById('productsGrid');
+    if (productsGrid) {
+        productsGrid.classList.add('loading');
+    }
 
-    // Apply filters
-    filteredProducts = allProducts.filter(product => {
-        return matchesSearch(product) &&
-               matchesCategory(product) &&
-               matchesBrand(product) &&
-               matchesPriceRange(product) &&
-               matchesColors(product) &&
-               matchesStockStatus(product) &&
-               matchesRatings(product) &&
-               matchesDiscounts(product);
+    // Build query parameters
+    const params = new URLSearchParams();
+    
+    if (currentFilters.search) params.append('search', currentFilters.search);
+    if (currentFilters.category) params.append('category', currentFilters.category);
+    if (currentFilters.brand) params.append('brand', currentFilters.brand);
+    if (currentFilters.priceRange) params.append('price_range', currentFilters.priceRange);
+    if (currentFilters.sortBy) params.append('sort', currentFilters.sortBy);
+    if (currentFilters.ratings.length > 0) params.append('min_rating', Math.min(...currentFilters.ratings));
+    if (currentFilters.discounts.length > 0) params.append('discount', Math.min(...currentFilters.discounts));
+    if (currentFilters.stockStatus.length > 0) params.append('stock', currentFilters.stockStatus[0]);
+    if (currentFilters.colors.length > 0) {
+        currentFilters.colors.forEach(color => params.append('colors', color));
+    }
+    
+    params.append('page', currentPage);
+
+    // Make API request
+    fetch(`/Product/?${params.toString()}`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        displayProducts(data.products);
+        updateResultsCount(data.total_count);
+        updatePagination(data);
+        
+        // Update URL without page reload
+        updateURL(params);
+        
+        // Show notification
+        const message = data.products.length > 0 
+            ? `تعداد ${data.total_count} محصول یافت شد` 
+            : 'محصولی با این فیلترها یافت نشد';
+        showNotification(message, data.products.length > 0 ? 'info' : 'warning');
+    })
+    .catch(error => {
+        console.error('Error applying filters:', error);
+        showNotification('خطا در بارگذاری محصولات', 'error');
+    })
+    .finally(() => {
+        isLoading = false;
+        if (productsGrid) {
+            productsGrid.classList.remove('loading');
+        }
     });
-
-    // Apply sorting
-    sortProducts();
-
-    // Update UI
-    updateResultsCount();
-    updateActiveFilters();
-    displayProducts();
-    showNotification(`تعداد ${filteredProducts.length} محصول یافت شد`, 'info');
 }
 
-// Filter functions
-function matchesSearch(product) {
-    if (!currentFilters.search) return true;
-    const searchTerm = currentFilters.search.toLowerCase();
-    return product.name.toLowerCase().includes(searchTerm) ||
-           product.description.toLowerCase().includes(searchTerm) ||
-           product.brand.toLowerCase().includes(searchTerm);
-}
-
-function matchesCategory(product) {
-    if (!currentFilters.category) return true;
-    return product.category === currentFilters.category;
-}
-
-function matchesBrand(product) {
-    if (!currentFilters.brand) return true;
-    return product.brand === currentFilters.brand;
-}
-
-function matchesPriceRange(product) {
-    if (!currentFilters.priceRange) return true;
-    const [min, max] = currentFilters.priceRange.split('-').map(Number);
-    return product.price >= min && product.price <= max;
-}
-
-function matchesColors(product) {
-    if (currentFilters.colors.length === 0) return true;
-    return currentFilters.colors.some(color => product.colors.includes(color));
-}
-
-function matchesStockStatus(product) {
-    if (currentFilters.stockStatus.length === 0) return true;
-    if (currentFilters.stockStatus.includes('in-stock')) {
-        return product.inStock;
+// Load more products for pagination
+function loadMoreProducts() {
+    if (isLoading) return;
+    
+    currentPage++;
+    isLoading = true;
+    
+    const params = new URLSearchParams();
+    
+    if (currentFilters.search) params.append('search', currentFilters.search);
+    if (currentFilters.category) params.append('category', currentFilters.category);
+    if (currentFilters.brand) params.append('brand', currentFilters.brand);
+    if (currentFilters.priceRange) params.append('price_range', currentFilters.priceRange);
+    if (currentFilters.sortBy) params.append('sort', currentFilters.sortBy);
+    if (currentFilters.ratings.length > 0) params.append('min_rating', Math.min(...currentFilters.ratings));
+    if (currentFilters.discounts.length > 0) params.append('discount', Math.min(...currentFilters.discounts));
+    if (currentFilters.stockStatus.length > 0) params.append('stock', currentFilters.stockStatus[0]);
+    if (currentFilters.colors.length > 0) {
+        currentFilters.colors.forEach(color => params.append('colors', color));
     }
-    if (currentFilters.stockStatus.includes('out-of-stock')) {
-        return !product.inStock;
-    }
-    return true;
-}
+    
+    params.append('page', currentPage);
 
-function matchesRatings(product) {
-    if (currentFilters.ratings.length === 0) return true;
-    return currentFilters.ratings.some(rating => product.rating >= parseInt(rating));
-}
-
-function matchesDiscounts(product) {
-    if (currentFilters.discounts.length === 0) return true;
-    return currentFilters.discounts.some(discount => product.discount >= parseInt(discount));
+    fetch(`/Product/?${params.toString()}`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        appendProducts(data.products);
+        updatePagination(data);
+    })
+    .catch(error => {
+        console.error('Error loading more products:', error);
+        currentPage--; // Revert page number on error
+    })
+    .finally(() => {
+        isLoading = false;
+    });
 }
 
 // Get selected values from checkboxes
@@ -391,36 +389,39 @@ function getSelectedDiscounts() {
     return Array.from(discountCheckboxes).map(cb => cb.value);
 }
 
-// Sort products
-function sortProducts() {
-    switch (currentFilters.sortBy) {
-        case 'price-low':
-            filteredProducts.sort((a, b) => a.price - b.price);
-            break;
-        case 'price-high':
-            filteredProducts.sort((a, b) => b.price - a.price);
-            break;
-        case 'name-asc':
-            filteredProducts.sort((a, b) => a.name.localeCompare(b.name, 'fa'));
-            break;
-        case 'name-desc':
-            filteredProducts.sort((a, b) => b.name.localeCompare(a.name, 'fa'));
-            break;
-        default:
-            // Keep original order
-            break;
-    }
-}
-
-// Update results count
-function updateResultsCount() {
+// Update results count with animation
+function updateResultsCount(count) {
     const resultsCount = document.getElementById('resultsCount');
     if (resultsCount) {
-        resultsCount.textContent = filteredProducts.length.toLocaleString('fa-IR');
+        const currentCount = parseInt(resultsCount.textContent) || 0;
+        const targetCount = count || 0;
+        
+        // Animate count change
+        animateCount(currentCount, targetCount, resultsCount);
     }
 }
 
-// Update active filters display
+// Animate count changes
+function animateCount(start, end, element) {
+    const duration = 500;
+    const startTime = performance.now();
+    
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        const current = Math.floor(start + (end - start) * progress);
+        element.textContent = current.toLocaleString('fa-IR');
+        
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        }
+    }
+    
+    requestAnimationFrame(update);
+}
+
+// Enhanced active filters display
 function updateActiveFilters() {
     const activeFiltersContainer = document.getElementById('activeFilters');
     if (!activeFiltersContainer) return;
@@ -439,45 +440,23 @@ function updateActiveFilters() {
     }
 
     if (currentFilters.category) {
-        const categoryNames = {
-            'mobile': 'گوشی موبایل',
-            'laptop': 'لپ تاپ',
-            'headphone': 'هندزفری',
-            'watch': 'ساعت هوشمند'
-        };
         activeFilters.push({
             type: 'category',
-            label: `دسته: ${categoryNames[currentFilters.category]}`,
+            label: `دسته: ${currentFilters.category}`,
             value: currentFilters.category
         });
     }
 
     if (currentFilters.brand) {
-        const brandNames = {
-            'samsung': 'سامسونگ',
-            'apple': 'اپل',
-            'xiaomi': 'شیائومی',
-            'nokia': 'نوکیا',
-            'lenovo': 'لنوو',
-            'asus': 'ایسوس',
-            'microsoft': 'مایکروسافت'
-        };
         activeFilters.push({
             type: 'brand',
-            label: `برند: ${brandNames[currentFilters.brand]}`,
+            label: `برند: ${currentFilters.brand}`,
             value: currentFilters.brand
         });
     }
 
     if (currentFilters.colors.length > 0) {
-        const colorNames = {
-            'black': 'مشکی',
-            'white': 'سفید',
-            'blue': 'آبی',
-            'red': 'قرمز',
-            'green': 'سبز'
-        };
-        const colorLabels = currentFilters.colors.map(color => colorNames[color]).join(', ');
+        const colorLabels = currentFilters.colors.join(', ');
         activeFilters.push({
             type: 'colors',
             label: `رنگ: ${colorLabels}`,
@@ -485,32 +464,39 @@ function updateActiveFilters() {
         });
     }
 
-    // Create filter tags
-    activeFilters.forEach(filter => {
+    // Create filter tags with animation
+    activeFilters.forEach((filter, index) => {
         const tag = document.createElement('div');
         tag.className = 'active-filter-tag';
+        tag.style.animationDelay = `${index * 100}ms`;
         tag.innerHTML = `
             <span>${filter.label}</span>
-            <span class="remove-filter" onclick="removeFilter('${filter.type}', '${filter.value}')">×</span>
+            <span class="remove-filter" onclick="removeFilter('${filter.type}', '${filter.value}')" title="حذف فیلتر">×</span>
         `;
         activeFiltersContainer.appendChild(tag);
     });
 }
 
-// Remove specific filter
+// Enhanced remove filter function
 function removeFilter(type, value) {
     switch (type) {
         case 'search':
             currentFilters.search = '';
-            document.getElementById('searchInput').value = '';
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.value = '';
+                searchInput.focus();
+            }
             break;
         case 'category':
             currentFilters.category = '';
-            document.getElementById('categoryFilter').value = '';
+            const categoryFilter = document.getElementById('categoryFilter');
+            if (categoryFilter) categoryFilter.value = '';
             break;
         case 'brand':
             currentFilters.brand = '';
-            document.getElementById('brandFilter').value = '';
+            const brandFilter = document.getElementById('brandFilter');
+            if (brandFilter) brandFilter.value = '';
             break;
         case 'colors':
             currentFilters.colors = currentFilters.colors.filter(color => color !== value);
@@ -523,17 +509,37 @@ function removeFilter(type, value) {
             });
             break;
     }
+    currentPage = 1;
     applyFilters();
 }
 
-// Clear all filters
+// Enhanced clear filters function
 function clearFilters() {
+    // Add confirmation for clearing all filters
+    if (Object.values(currentFilters).some(filter => 
+        (Array.isArray(filter) && filter.length > 0) || 
+        (typeof filter === 'string' && filter.length > 0)
+    )) {
+        if (!confirm('آیا مطمئن هستید که می‌خواهید همه فیلترها را پاک کنید؟')) {
+            return;
+        }
+    }
+
     // Reset all form elements
-    document.getElementById('searchInput').value = '';
-    document.getElementById('categoryFilter').value = '';
-    document.getElementById('brandFilter').value = '';
-    document.getElementById('priceFilter').value = '';
-    document.getElementById('sortFilter').value = '';
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.value = '';
+    
+    const categoryFilter = document.getElementById('categoryFilter');
+    if (categoryFilter) categoryFilter.value = '';
+    
+    const brandFilter = document.getElementById('brandFilter');
+    if (brandFilter) brandFilter.value = '';
+    
+    const priceFilter = document.getElementById('priceFilter');
+    if (priceFilter) priceFilter.value = '';
+    
+    const sortFilter = document.getElementById('sortFilter');
+    if (sortFilter) sortFilter.value = '';
 
     // Reset checkboxes
     document.querySelectorAll('.color-option input[type="checkbox"]').forEach(cb => cb.checked = false);
@@ -554,12 +560,12 @@ function clearFilters() {
         discounts: []
     };
 
-    // Apply filters
+    currentPage = 1;
     applyFilters();
     showNotification('همه فیلترها پاک شدند', 'success');
 }
 
-// Toggle advanced filters
+// Enhanced toggle advanced filters
 function toggleAdvancedFilters() {
     const advancedFilters = document.getElementById('advancedFilters');
     const button = document.querySelector('.advanced-filter-btn');
@@ -567,34 +573,214 @@ function toggleAdvancedFilters() {
     if (advancedFilters.classList.contains('active')) {
         advancedFilters.classList.remove('active');
         button.innerHTML = '<i class="fas fa-sliders-h"></i> فیلترهای پیشرفته';
+        button.setAttribute('aria-expanded', 'false');
     } else {
         advancedFilters.classList.add('active');
         button.innerHTML = '<i class="fas fa-chevron-up"></i> مخفی کردن';
+        button.setAttribute('aria-expanded', 'true');
     }
 }
 
-// Display products (this would be implemented based on your HTML structure)
-function displayProducts() {
-    // This function would update the product display based on filteredProducts
-    // For now, we'll just log the results
-    console.log('Filtered products:', filteredProducts);
-    
-    // In a real implementation, you would:
-    // 1. Clear the current product display
-    // 2. Loop through filteredProducts
-    // 3. Create product cards/elements
-    // 4. Add them to the DOM
+// Display products from API data
+function displayProducts(products) {
+    const productsGrid = document.getElementById('productsGrid');
+    if (!productsGrid) return;
+
+    // Clear current products
+    productsGrid.innerHTML = '';
+
+    if (products.length === 0) {
+        productsGrid.innerHTML = `
+            <div class="no-products">
+                <i class="fas fa-search"></i>
+                <h4>محصولی یافت نشد</h4>
+                <p>لطفاً فیلترهای خود را تغییر دهید یا محصول دیگری جستجو کنید</p>
+                <button onclick="clearFilters()" class="clear-filters-btn">
+                    <i class="fas fa-times"></i>
+                    پاک کردن فیلترها
+                </button>
+            </div>
+        `;
+        return;
+    }
+
+    // Create product cards with animation
+    products.forEach((product, index) => {
+        const productCard = createProductCard(product, index);
+        productsGrid.appendChild(productCard);
+    });
 }
 
-// Show notification
+// Append products for pagination
+function appendProducts(products) {
+    const productsGrid = document.getElementById('productsGrid');
+    if (!productsGrid) return;
+
+    // Create product cards with animation
+    products.forEach((product, index) => {
+        const productCard = createProductCard(product, index);
+        productsGrid.appendChild(productCard);
+    });
+}
+
+// Create product card element
+function createProductCard(product, index) {
+    const card = document.createElement('div');
+    card.className = 'grid-cart';
+    card.style.animationDelay = `${index * 100}ms`;
+    card.setAttribute('data-category', product.category);
+    
+    card.innerHTML = `
+        <div class="item-grid-cart">
+            <div class="product-image-container">
+                <div class="img-cart">
+                    <img src="${product.image}" alt="${product.title}" class="product-image">
+                </div>
+                <div class="product-overlay">
+                    <div class="overlay-actions">
+                        <button class="quick-view-btn" onclick="quickView(${product.id})" title="نمایش سریع">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="wishlist-btn" onclick="addToWishlist(${product.id})" title="افزودن به علاقه‌مندی‌ها">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <button class="compare-btn" onclick="addToCompare(${product.id})" title="افزودن به مقایسه">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                ${product.discount_percent > 0 ? `<div class="discount-label"><span>${product.discount_percent}٪</span></div>` : ''}
+            </div>
+            
+            <div class="caption-item-cart">
+                <div class="product-category">
+                    <span>${product.category}</span>
+                </div>
+                <h5 class="title-cart">
+                    <a href="${product.url}">${product.title}</a>
+                </h5>
+                
+                <div class="product-rating">
+                    <div class="stars">
+                        ${generateStars(product.rating)}
+                    </div>
+                    <span class="rating-count">(${product.rating})</span>
+                </div>
+                
+                <div class="product-price">
+                    <span class="current-price">${formatPrice(product.price)} تومان</span>
+                    ${product.original_price ? `<span class="original-price">${formatPrice(product.original_price)} تومان</span>` : ''}
+                </div>
+                
+                <div class="product-actions">
+                    <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
+                        <i class="fas fa-shopping-cart"></i>
+                        اضافه کردن به سبد خرید
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    return card;
+}
+
+// Update pagination
+function updatePagination(data) {
+    totalPages = data.total_pages;
+    currentPage = data.current_page;
+    
+    // Update pagination controls if they exist
+    const paginationContainer = document.querySelector('.pagination-container');
+    if (paginationContainer) {
+        // Update pagination UI
+        updatePaginationUI(data);
+    }
+}
+
+// Update pagination UI
+function updatePaginationUI(data) {
+    const paginationContainer = document.querySelector('.pagination-container');
+    if (!paginationContainer) return;
+    
+    let paginationHTML = '';
+    
+    if (data.has_previous) {
+        paginationHTML += `<a href="#" onclick="goToPage(${data.current_page - 1})" class="page-link">
+            <i class="fas fa-chevron-right"></i>
+        </a>`;
+    }
+    
+    for (let i = 1; i <= data.total_pages; i++) {
+        if (i === data.current_page) {
+            paginationHTML += `<span class="page-link active">${i}</span>`;
+        } else if (i > data.current_page - 3 && i < data.current_page + 3) {
+            paginationHTML += `<a href="#" onclick="goToPage(${i})" class="page-link">${i}</a>`;
+        }
+    }
+    
+    if (data.has_next) {
+        paginationHTML += `<a href="#" onclick="goToPage(${data.current_page + 1})" class="page-link">
+            <i class="fas fa-chevron-left"></i>
+        </a>`;
+    }
+    
+    paginationContainer.querySelector('.pagination').innerHTML = paginationHTML;
+}
+
+// Go to specific page
+function goToPage(page) {
+    currentPage = page;
+    applyFilters();
+}
+
+// Update URL without page reload
+function updateURL(params) {
+    const newURL = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({}, '', newURL);
+}
+
+// Helper functions
+function generateStars(rating) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    
+    let stars = '';
+    for (let i = 0; i < fullStars; i++) {
+        stars += '<i class="fas fa-star"></i>';
+    }
+    if (hasHalfStar) {
+        stars += '<i class="fas fa-star-half-alt"></i>';
+    }
+    for (let i = 0; i < emptyStars; i++) {
+        stars += '<i class="far fa-star"></i>';
+    }
+    return stars;
+}
+
+function formatPrice(price) {
+    return price.toLocaleString('fa-IR');
+}
+
+// Enhanced notification system
 function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
+
     // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.innerHTML = `
         <div class="notification-content">
-            <span>${message}</span>
-            <button onclick="this.parentElement.parentElement.remove()">×</button>
+            <div class="notification-icon">
+                <i class="${getNotificationIcon(type)}"></i>
+            </div>
+            <span class="notification-message">${message}</span>
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
     `;
     
@@ -606,39 +792,55 @@ function showNotification(message, type = 'info') {
         background: ${getNotificationColor(type)};
         color: white;
         padding: 1rem 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         z-index: 3000;
         max-width: 400px;
-        animation: slideIn 0.3s ease;
-        font-family: Tanha, sans-serif;
+        animation: slideInNotification 0.3s ease;
+        font-family: 'Tanha', sans-serif;
+        border: 1px solid rgba(255,255,255,0.2);
     `;
     
     // Add to page
     document.body.appendChild(notification);
     
-    // Auto remove after 3 seconds
+    // Auto remove after 4 seconds
     setTimeout(() => {
         if (notification.parentElement) {
-            notification.remove();
+            notification.style.animation = 'slideOutNotification 0.3s ease';
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 300);
         }
-    }, 3000);
+    }, 4000);
+}
+
+function getNotificationIcon(type) {
+    const icons = {
+        'success': 'fas fa-check-circle',
+        'warning': 'fas fa-exclamation-triangle',
+        'error': 'fas fa-times-circle',
+        'info': 'fas fa-info-circle'
+    };
+    return icons[type] || icons.info;
 }
 
 function getNotificationColor(type) {
     const colors = {
-        'success': '#28a745',
-        'warning': '#ffc107',
-        'error': '#dc3545',
-        'info': '#17a2b8'
+        'success': 'linear-gradient(135deg, #28a745, #20c997)',
+        'warning': 'linear-gradient(135deg, #ffc107, #fd7e14)',
+        'error': 'linear-gradient(135deg, #dc3545, #e83e8c)',
+        'info': 'linear-gradient(135deg, #17a2b8, #31a9cc)'
     };
     return colors[type] || colors.info;
 }
 
-// Add CSS animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
+// Add enhanced CSS animations
+const enhancedStyles = document.createElement('style');
+enhancedStyles.textContent = `
+    @keyframes slideInNotification {
         from {
             transform: translateX(-100%);
             opacity: 0;
@@ -649,36 +851,143 @@ style.textContent = `
         }
     }
     
+    @keyframes slideOutNotification {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+    }
+    
     .notification-content {
         display: flex;
-        justify-content: space-between;
         align-items: center;
         gap: 1rem;
     }
     
-    .notification-content button {
+    .notification-icon {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+    
+    .notification-message {
+        flex: 1;
+        font-weight: 500;
+    }
+    
+    .notification-close {
         background: none;
         border: none;
         color: white;
-        font-size: 1.2rem;
+        font-size: 1rem;
         cursor: pointer;
-        padding: 0;
-        width: 20px;
-        height: 20px;
+        padding: 0.2rem;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
+        transition: background-color 0.3s ease;
     }
     
-    .notification-content button:hover {
-        opacity: 0.8;
+    .notification-close:hover {
+        background-color: rgba(255,255,255,0.2);
+    }
+    
+    .search-btn.searching {
+        animation: pulse 1s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    
+    .search-input-group.focused {
+        box-shadow: 0 4px 16px rgba(49, 169, 204, 0.3);
+        transform: translateY(-1px);
+    }
+    
+    .active-filter-tag {
+        animation: slideUp 0.3s ease;
+    }
+    
+    .grid-cart {
+        animation: fadeIn 0.5s ease;
+    }
+    
+    .no-products {
+        animation: fadeIn 0.5s ease;
+    }
+    
+    .no-products .clear-filters-btn {
+        margin-top: 1rem;
+        background: linear-gradient(135deg, #31a9cc, #5c48ee);
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: 'Tanha', sans-serif;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .no-products .clear-filters-btn:hover {
+        background: linear-gradient(135deg, #0f1e6a, #31a9cc);
+        transform: translateY(-1px);
+    }
+    
+    .products-grid.loading {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+    
+    .products-grid.loading::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 40px;
+        height: 40px;
+        margin: -20px 0 0 -20px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #31a9cc;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(enhancedStyles);
 
 // Export functions for global access
 window.performSearch = performSearch;
 window.applyFilters = applyFilters;
 window.clearFilters = clearFilters;
 window.toggleAdvancedFilters = toggleAdvancedFilters;
-window.removeFilter = removeFilter; 
+window.removeFilter = removeFilter;
+window.goToPage = goToPage;
+window.quickView = function(productId) {
+    console.log('Quick view for product:', productId);
+    showNotification('نمایش سریع محصول', 'info');
+};
+window.addToWishlist = function(productId) {
+    console.log('Add to wishlist:', productId);
+    showNotification('محصول به لیست علاقه‌مندی‌ها اضافه شد', 'success');
+};
+window.addToCompare = function(productId) {
+    console.log('Add to compare:', productId);
+    showNotification('محصول به لیست مقایسه اضافه شد', 'info');
+};
+window.addToCart = function(productId) {
+    console.log('Add to cart:', productId);
+    showNotification('محصول به سبد خرید اضافه شد', 'success');
+};

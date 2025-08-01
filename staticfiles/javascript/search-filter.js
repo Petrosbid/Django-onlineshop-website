@@ -1,4 +1,4 @@
-// Search and Filter Functionality for Products List Page
+// Enhanced Search and Filter Functionality for Products List Page
 
 // Global variables
 let allProducts = [];
@@ -14,224 +14,13 @@ let currentFilters = {
     ratings: [],
     discounts: []
 };
-
-// Product data structure (sample data based on the HTML)
-const productData = [
-    {
-        id: 1,
-        name: 'S25 Ultra',
-        category: 'mobile',
-        brand: 'samsung',
-        price: 102490000,
-        description: 'گوشی موبایل سامسونگ مدل گلکسی S25 Ultra ظرفیت 256 گیگابایت رم 12 گیگابایت - ویتنام',
-        image: '../images/s25-2.jpg',
-        colors: ['black', 'blue'],
-        inStock: true,
-        rating: 4.5,
-        discount: 0
-    },
-    {
-        id: 2,
-        name: '16Pro Max',
-        category: 'mobile',
-        brand: 'apple',
-        price: 142300000,
-        description: 'گوشی موبایل اپل مدل Iphone 16 Pro Max ظرفیت 256 گیگابایت رم 8 گیگابایت - ویتنام',
-        image: '../images/16pro-3.jpg',
-        colors: ['black', 'white'],
-        inStock: true,
-        rating: 4.8,
-        discount: 5
-    },
-    {
-        id: 3,
-        name: 'Xiaomi 15 pro',
-        category: 'mobile',
-        brand: 'xiaomi',
-        price: 72000000,
-        description: 'گوشی موبایل شیائومی مدل Xiaomi 15 pro ظرفیت 256 گیگابایت رم 12 گیگابایت - ویتنام',
-        image: '../images/xiaomi 15pr-4.jpg',
-        colors: ['black', 'red'],
-        inStock: true,
-        rating: 4.2,
-        discount: 15
-    },
-    {
-        id: 4,
-        name: 'Nokia Magic Max 5G',
-        category: 'mobile',
-        brand: 'nokia',
-        price: 22453000,
-        description: 'گوشی موبایل شیائومی مدل Nokia Magic Max 5G ظرفیت 256 گیگابایت رم 12 گیگابایت - ویتنام',
-        image: '../images/nokia-4.jpg',
-        colors: ['blue', 'green'],
-        inStock: false,
-        rating: 3.8,
-        discount: 25
-    },
-    {
-        id: 5,
-        name: 'Apple Airpods 4',
-        category: 'headphone',
-        brand: 'apple',
-        price: 13500000,
-        description: 'ایرپاد 4 اپل با قابلیت active noise cancellation Airpods 4 with Active Noise Cancellation',
-        image: '../images/airpadpro-2.jpg',
-        colors: ['white'],
-        inStock: true,
-        rating: 4.6,
-        discount: 0
-    },
-    {
-        id: 6,
-        name: 'Galaxy Buds 3 pro',
-        category: 'headphone',
-        brand: 'samsung',
-        price: 8619000,
-        description: 'هندزفری بلوتوثی سامسونگ مدل Galaxy Buds 3 pro Samsung Galaxy Buds 3 pro Bluetooth Earbuds',
-        image: '../images/buds3pro-1.jpg',
-        colors: ['black', 'white'],
-        inStock: true,
-        rating: 4.3,
-        discount: 10
-    },
-    {
-        id: 7,
-        name: 'Flip Buds pro TWSEJ20GT',
-        category: 'headphone',
-        brand: 'xiaomi',
-        price: 9899000,
-        description: 'هندزفری شیائومی مدل Flip Buds pro TWSEJ20GT Xiaomi Flip Buds pro TWSEJ20GT Bluetooth',
-        image: '../images/flipbudspro-1.jpg',
-        colors: ['black'],
-        inStock: true,
-        rating: 4.1,
-        discount: 20
-    },
-    {
-        id: 8,
-        name: 'T13 ANC 2',
-        category: 'headphone',
-        brand: 'qcy',
-        price: 1289000,
-        description: 'هندزفری بلوتوثی کیو سی وای مدل T13 ANC 2 QCY T13 ANC 2 Bluetooth Earphons',
-        image: '../images/t13anc2-1.jpg',
-        colors: ['black', 'blue'],
-        inStock: false,
-        rating: 3.9,
-        discount: 30
-    },
-    {
-        id: 9,
-        name: 'Galaxy Watch6 44mm',
-        category: 'watch',
-        brand: 'samsung',
-        price: 12290000,
-        description: 'ساعت هوشمند سامسونگ مدل Galaxy Watch6 44mm Samsung Galaxy Watch6 44mm Smart Watch',
-        image: '../images/watch644mm-4.jpg',
-        colors: ['black', 'blue'],
-        inStock: true,
-        rating: 4.4,
-        discount: 0
-    },
-    {
-        id: 10,
-        name: 'Ultra 49mm loop',
-        category: 'watch',
-        brand: 'apple',
-        price: 49900000,
-        description: 'ساعت هوشمند اپل مدل Ultra 49mm loop Iphone Watch Ultra 49mm Alpine loop',
-        image: '../images/watch49mmloop-1.jpg',
-        colors: ['black'],
-        inStock: true,
-        rating: 4.7,
-        discount: 0
-    },
-    {
-        id: 11,
-        name: 'Solar Pro',
-        category: 'watch',
-        brand: 'haylou',
-        price: 4390000,
-        description: 'ساعت هوشمند هایلو مدل Solar Pro Alpine Haylou Solar Pro Alpine Smart Watch',
-        image: '../images/solarpro-2.jpg',
-        colors: ['black', 'blue'],
-        inStock: true,
-        rating: 4.0,
-        discount: 15
-    },
-    {
-        id: 12,
-        name: 'GS Pro',
-        category: 'watch',
-        brand: 'mibro',
-        price: 6500000,
-        description: 'ساعت هوشمند میبرو مدل GS Pro Alpine Mibro Watch GS Pro Alpine Smart Watch',
-        image: '../images/gspro-1.jpg',
-        colors: ['black'],
-        inStock: false,
-        rating: 3.7,
-        discount: 20
-    },
-    {
-        id: 13,
-        name: 'MacBook Air MW123 M4',
-        category: 'laptop',
-        brand: 'apple',
-        price: 805000000,
-        description: 'لبتاپ اپل 13.6 اینچی مدل MacBook Air MW123 M4 MacBook Air MW123 M4 2025 16GB RAM 256GB SSD',
-        image: '../images/macbook-1.webp',
-        colors: ['white'],
-        inStock: true,
-        rating: 4.8,
-        discount: 0
-    },
-    {
-        id: 14,
-        name: 'Surface Studio-i7',
-        category: 'laptop',
-        brand: 'microsoft',
-        price: 88700000,
-        description: 'لبتاپ 14.4 اینچی مایکروسافت Surface Studio-(i7-32GB-1TB) Microsoft Surface Laptop Studio(i7-32GB-1TB)',
-        image: '../images/surfacestudio-2.webp',
-        colors: ['black'],
-        inStock: true,
-        rating: 4.5,
-        discount: 5
-    },
-    {
-        id: 15,
-        name: 'Legion Pro 5 2024',
-        category: 'laptop',
-        brand: 'lenovo',
-        price: 63319000,
-        description: 'لبتاپ لنوو Legion Pro 5 2024-BB 14650HX i7 64GB 1TB SSD Lenovo Legion Pro 5 2024-BB 14650HX i7 64GB 1TB SSD',
-        image: '../images/lenovo-1.webp',
-        colors: ['black'],
-        inStock: true,
-        rating: 4.3,
-        discount: 10
-    },
-    {
-        id: 16,
-        name: 'ROG Strix G18 G814JI',
-        category: 'laptop',
-        brand: 'asus',
-        price: 76129000,
-        description: 'لبتاپ ایسوس ROG Strix G18 G814JI-C 13650HX i7 16GB 2TB SSD ASUS ROG Strix G18 G814JI-C 13650HX i7 16GB 2TB SSD',
-        image: '../images/asus-1.webp',
-        colors: ['black'],
-        inStock: false,
-        rating: 4.2,
-        discount: 15
-    }
-];
-
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
     initializeSearchFilter();
     setupEventListeners();
     loadAllProducts();
+    setupKeyboardShortcuts();
+    initializeAnimations();
 });
 
 // Initialize search and filter functionality
@@ -240,6 +29,12 @@ function initializeSearchFilter() {
     filteredProducts = [...allProducts];
     updateResultsCount();
     updateActiveFilters();
+    
+    // Add loading animation
+    const productsGrid = document.getElementById('productsGrid');
+    if (productsGrid) {
+        productsGrid.classList.add('fade-in');
+    }
 }
 
 // Setup event listeners
@@ -255,23 +50,114 @@ function setupEventListeners() {
                 applyFilters();
             }, 300);
         });
+        
+        // Enter key in search
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        // Focus effects
+        searchInput.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        searchInput.addEventListener('blur', function() {
+            this.parentElement.classList.remove('focused');
+        });
     }
 
-    // Enter key in search
-    searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            performSearch();
+    // Filter change events
+    const filterElements = document.querySelectorAll('.filter-select, .color-option input, .stock-option input, .rating-option input, .discount-option input');
+    filterElements.forEach(element => {
+        element.addEventListener('change', function() {
+            applyFilters();
+        });
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey || e.metaKey) {
+            switch(e.key) {
+                case 'k':
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                    break;
+                case 'f':
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                    break;
+            }
         }
+    });
+}
+
+// Setup keyboard shortcuts
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', function(e) {
+        // Ctrl/Cmd + K to focus search
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.focus();
+                searchInput.select();
+            }
+        }
+        
+        // Escape to clear filters
+        if (e.key === 'Escape') {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput && document.activeElement === searchInput) {
+                searchInput.value = '';
+                currentFilters.search = '';
+                applyFilters();
+            }
+        }
+    });
+}
+
+// Initialize animations
+function initializeAnimations() {
+    // Add intersection observer for fade-in animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in');
+            }
+        });
+    }, observerOptions);
+
+    // Observe product cards
+    const productCards = document.querySelectorAll('.grid-cart');
+    productCards.forEach(card => {
+        observer.observe(card);
     });
 }
 
 // Load all products (simulate API call)
 function loadAllProducts() {
-    // In a real application, this would be an API call
-    console.log('Loading products...');
+    // Show loading state
+    const productsGrid = document.getElementById('productsGrid');
+    if (productsGrid) {
+        productsGrid.classList.add('loading');
+    }
+    
+    // Simulate API call delay
     setTimeout(() => {
         applyFilters();
-    }, 100);
+        
+        // Remove loading state
+        if (productsGrid) {
+            productsGrid.classList.remove('loading');
+        }
+    }, 500);
 }
 
 // Perform search
@@ -280,16 +166,31 @@ function performSearch() {
     if (searchInput) {
         currentFilters.search = searchInput.value;
         applyFilters();
+        
+        // Add search animation
+        const searchBtn = document.querySelector('.search-btn');
+        if (searchBtn) {
+            searchBtn.classList.add('searching');
+            setTimeout(() => {
+                searchBtn.classList.remove('searching');
+            }, 1000);
+        }
     }
 }
 
-// Apply all filters
+// Apply all filters with enhanced performance
 function applyFilters() {
+    // Show loading state
+    const productsGrid = document.getElementById('productsGrid');
+    if (productsGrid) {
+        productsGrid.classList.add('loading');
+    }
+
     // Get filter values
-    currentFilters.category = document.getElementById('categoryFilter').value;
-    currentFilters.brand = document.getElementById('brandFilter').value;
-    currentFilters.priceRange = document.getElementById('priceFilter').value;
-    currentFilters.sortBy = document.getElementById('sortFilter').value;
+    currentFilters.category = document.getElementById('categoryFilter')?.value || '';
+    currentFilters.brand = document.getElementById('brandFilter')?.value || '';
+    currentFilters.priceRange = document.getElementById('priceFilter')?.value || '';
+    currentFilters.sortBy = document.getElementById('sortFilter')?.value || '';
     
     // Get advanced filter values
     currentFilters.colors = getSelectedColors();
@@ -297,35 +198,47 @@ function applyFilters() {
     currentFilters.ratings = getSelectedRatings();
     currentFilters.discounts = getSelectedDiscounts();
 
-    // Apply filters
-    filteredProducts = allProducts.filter(product => {
-        return matchesSearch(product) &&
-               matchesCategory(product) &&
-               matchesBrand(product) &&
-               matchesPriceRange(product) &&
-               matchesColors(product) &&
-               matchesStockStatus(product) &&
-               matchesRatings(product) &&
-               matchesDiscounts(product);
+    // Use requestAnimationFrame for smooth performance
+    requestAnimationFrame(() => {
+        // Apply filters
+        filteredProducts = allProducts.filter(product => {
+            return matchesSearch(product) &&
+                   matchesCategory(product) &&
+                   matchesBrand(product) &&
+                   matchesPriceRange(product) &&
+                   matchesColors(product) &&
+                   matchesStockStatus(product) &&
+                   matchesRatings(product) &&
+                   matchesDiscounts(product);
+        });
+
+        // Apply sorting
+        sortProducts();
+
+        // Update UI
+        updateResultsCount();
+        updateActiveFilters();
+        displayProducts();
+        
+        // Remove loading state
+        if (productsGrid) {
+            productsGrid.classList.remove('loading');
+        }
+        
+        // Show notification
+        const message = filteredProducts.length > 0 
+            ? `تعداد ${filteredProducts.length} محصول یافت شد` 
+            : 'محصولی با این فیلترها یافت نشد';
+        showNotification(message, filteredProducts.length > 0 ? 'info' : 'warning');
     });
-
-    // Apply sorting
-    sortProducts();
-
-    // Update UI
-    updateResultsCount();
-    updateActiveFilters();
-    displayProducts();
-    showNotification(`تعداد ${filteredProducts.length} محصول یافت شد`, 'info');
 }
 
-// Filter functions
+// Enhanced filter functions with better performance
 function matchesSearch(product) {
     if (!currentFilters.search) return true;
     const searchTerm = currentFilters.search.toLowerCase();
-    return product.name.toLowerCase().includes(searchTerm) ||
-           product.description.toLowerCase().includes(searchTerm) ||
-           product.brand.toLowerCase().includes(searchTerm);
+    const searchableText = `${product.name} ${product.description} ${product.brand}`.toLowerCase();
+    return searchableText.includes(searchTerm);
 }
 
 function matchesCategory(product) {
@@ -370,7 +283,7 @@ function matchesDiscounts(product) {
     return currentFilters.discounts.some(discount => product.discount >= parseInt(discount));
 }
 
-// Get selected values from checkboxes
+// Get selected values from checkboxes with enhanced performance
 function getSelectedColors() {
     const colorCheckboxes = document.querySelectorAll('.color-option input[type="checkbox"]:checked');
     return Array.from(colorCheckboxes).map(cb => cb.value);
@@ -391,7 +304,7 @@ function getSelectedDiscounts() {
     return Array.from(discountCheckboxes).map(cb => cb.value);
 }
 
-// Sort products
+// Enhanced sorting with better performance
 function sortProducts() {
     switch (currentFilters.sortBy) {
         case 'price-low':
@@ -406,21 +319,51 @@ function sortProducts() {
         case 'name-desc':
             filteredProducts.sort((a, b) => b.name.localeCompare(a.name, 'fa'));
             break;
+        case 'rating':
+            filteredProducts.sort((a, b) => b.rating - a.rating);
+            break;
+        case 'discount':
+            filteredProducts.sort((a, b) => b.discount - a.discount);
+            break;
         default:
             // Keep original order
             break;
     }
 }
 
-// Update results count
+// Update results count with animation
 function updateResultsCount() {
     const resultsCount = document.getElementById('resultsCount');
     if (resultsCount) {
-        resultsCount.textContent = filteredProducts.length.toLocaleString('fa-IR');
+        const currentCount = parseInt(resultsCount.textContent) || 0;
+        const targetCount = filteredProducts.length;
+        
+        // Animate count change
+        animateCount(currentCount, targetCount, resultsCount);
     }
 }
 
-// Update active filters display
+// Animate count changes
+function animateCount(start, end, element) {
+    const duration = 500;
+    const startTime = performance.now();
+    
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        const current = Math.floor(start + (end - start) * progress);
+        element.textContent = current.toLocaleString('fa-IR');
+        
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        }
+    }
+    
+    requestAnimationFrame(update);
+}
+
+// Enhanced active filters display
 function updateActiveFilters() {
     const activeFiltersContainer = document.getElementById('activeFilters');
     if (!activeFiltersContainer) return;
@@ -485,32 +428,39 @@ function updateActiveFilters() {
         });
     }
 
-    // Create filter tags
-    activeFilters.forEach(filter => {
+    // Create filter tags with animation
+    activeFilters.forEach((filter, index) => {
         const tag = document.createElement('div');
         tag.className = 'active-filter-tag';
+        tag.style.animationDelay = `${index * 100}ms`;
         tag.innerHTML = `
             <span>${filter.label}</span>
-            <span class="remove-filter" onclick="removeFilter('${filter.type}', '${filter.value}')">×</span>
+            <span class="remove-filter" onclick="removeFilter('${filter.type}', '${filter.value}')" title="حذف فیلتر">×</span>
         `;
         activeFiltersContainer.appendChild(tag);
     });
 }
 
-// Remove specific filter
+// Enhanced remove filter function
 function removeFilter(type, value) {
     switch (type) {
         case 'search':
             currentFilters.search = '';
-            document.getElementById('searchInput').value = '';
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.value = '';
+                searchInput.focus();
+            }
             break;
         case 'category':
             currentFilters.category = '';
-            document.getElementById('categoryFilter').value = '';
+            const categoryFilter = document.getElementById('categoryFilter');
+            if (categoryFilter) categoryFilter.value = '';
             break;
         case 'brand':
             currentFilters.brand = '';
-            document.getElementById('brandFilter').value = '';
+            const brandFilter = document.getElementById('brandFilter');
+            if (brandFilter) brandFilter.value = '';
             break;
         case 'colors':
             currentFilters.colors = currentFilters.colors.filter(color => color !== value);
@@ -526,14 +476,33 @@ function removeFilter(type, value) {
     applyFilters();
 }
 
-// Clear all filters
+// Enhanced clear filters function
 function clearFilters() {
+    // Add confirmation for clearing all filters
+    if (Object.values(currentFilters).some(filter => 
+        (Array.isArray(filter) && filter.length > 0) || 
+        (typeof filter === 'string' && filter.length > 0)
+    )) {
+        if (!confirm('آیا مطمئن هستید که می‌خواهید همه فیلترها را پاک کنید؟')) {
+            return;
+        }
+    }
+
     // Reset all form elements
-    document.getElementById('searchInput').value = '';
-    document.getElementById('categoryFilter').value = '';
-    document.getElementById('brandFilter').value = '';
-    document.getElementById('priceFilter').value = '';
-    document.getElementById('sortFilter').value = '';
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.value = '';
+    
+    const categoryFilter = document.getElementById('categoryFilter');
+    if (categoryFilter) categoryFilter.value = '';
+    
+    const brandFilter = document.getElementById('brandFilter');
+    if (brandFilter) brandFilter.value = '';
+    
+    const priceFilter = document.getElementById('priceFilter');
+    if (priceFilter) priceFilter.value = '';
+    
+    const sortFilter = document.getElementById('sortFilter');
+    if (sortFilter) sortFilter.value = '';
 
     // Reset checkboxes
     document.querySelectorAll('.color-option input[type="checkbox"]').forEach(cb => cb.checked = false);
@@ -559,7 +528,7 @@ function clearFilters() {
     showNotification('همه فیلترها پاک شدند', 'success');
 }
 
-// Toggle advanced filters
+// Enhanced toggle advanced filters
 function toggleAdvancedFilters() {
     const advancedFilters = document.getElementById('advancedFilters');
     const button = document.querySelector('.advanced-filter-btn');
@@ -567,34 +536,158 @@ function toggleAdvancedFilters() {
     if (advancedFilters.classList.contains('active')) {
         advancedFilters.classList.remove('active');
         button.innerHTML = '<i class="fas fa-sliders-h"></i> فیلترهای پیشرفته';
+        button.setAttribute('aria-expanded', 'false');
     } else {
         advancedFilters.classList.add('active');
         button.innerHTML = '<i class="fas fa-chevron-up"></i> مخفی کردن';
+        button.setAttribute('aria-expanded', 'true');
     }
 }
 
-// Display products (this would be implemented based on your HTML structure)
+// Enhanced display products function
 function displayProducts() {
-    // This function would update the product display based on filteredProducts
-    // For now, we'll just log the results
-    console.log('Filtered products:', filteredProducts);
-    
-    // In a real implementation, you would:
-    // 1. Clear the current product display
-    // 2. Loop through filteredProducts
-    // 3. Create product cards/elements
-    // 4. Add them to the DOM
+    const productsGrid = document.getElementById('productsGrid');
+    if (!productsGrid) return;
+
+    // Clear current products
+    productsGrid.innerHTML = '';
+
+    if (filteredProducts.length === 0) {
+        productsGrid.innerHTML = `
+            <div class="no-products">
+                <i class="fas fa-search"></i>
+                <h4>محصولی یافت نشد</h4>
+                <p>لطفاً فیلترهای خود را تغییر دهید یا محصول دیگری جستجو کنید</p>
+                <button onclick="clearFilters()" class="clear-filters-btn">
+                    <i class="fas fa-times"></i>
+                    پاک کردن فیلترها
+                </button>
+            </div>
+        `;
+        return;
+    }
+
+    // Create product cards with animation
+    filteredProducts.forEach((product, index) => {
+        const productCard = createProductCard(product, index);
+        productsGrid.appendChild(productCard);
+    });
 }
 
-// Show notification
+// Create product card element
+function createProductCard(product, index) {
+    const card = document.createElement('div');
+    card.className = 'grid-cart';
+    card.style.animationDelay = `${index * 100}ms`;
+    card.setAttribute('data-category', product.category);
+    card.setAttribute('data-brand', product.brand);
+    
+    card.innerHTML = `
+        <div class="item-grid-cart">
+            <div class="product-image-container">
+                <div class="img-cart">
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                </div>
+                <div class="product-overlay">
+                    <div class="overlay-actions">
+                        <button class="quick-view-btn" onclick="quickView(${product.id})" title="نمایش سریع">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="wishlist-btn" onclick="addToWishlist(${product.id})" title="افزودن به علاقه‌مندی‌ها">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <button class="compare-btn" onclick="addToCompare(${product.id})" title="افزودن به مقایسه">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                ${product.discount > 0 ? `<div class="discount-label"><span>${product.discount}٪</span></div>` : ''}
+            </div>
+            
+            <div class="caption-item-cart">
+                <div class="product-category">
+                    <span>${getCategoryName(product.category)}</span>
+                </div>
+                <h5 class="title-cart">
+                    <a href="/Product/${product.id}">${product.name}</a>
+                </h5>
+                
+                <div class="product-rating">
+                    <div class="stars">
+                        ${generateStars(product.rating)}
+                    </div>
+                    <span class="rating-count">(${product.rating})</span>
+                </div>
+                
+                <div class="product-price">
+                    <span class="current-price">${formatPrice(product.price)} تومان</span>
+                    ${product.original_price ? `<span class="original-price">${formatPrice(product.original_price)} تومان</span>` : ''}
+                </div>
+                
+                <div class="product-actions">
+                    <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
+                        <i class="fas fa-shopping-cart"></i>
+                        اضافه کردن به سبد خرید
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    return card;
+}
+
+// Helper functions
+function getCategoryName(category) {
+    const categoryNames = {
+        'mobile': 'گوشی موبایل',
+        'laptop': 'لپ تاپ',
+        'headphone': 'هندزفری',
+        'watch': 'ساعت هوشمند'
+    };
+    return categoryNames[category] || category;
+}
+
+function generateStars(rating) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    
+    let stars = '';
+    for (let i = 0; i < fullStars; i++) {
+        stars += '<i class="fas fa-star"></i>';
+    }
+    if (hasHalfStar) {
+        stars += '<i class="fas fa-star-half-alt"></i>';
+    }
+    for (let i = 0; i < emptyStars; i++) {
+        stars += '<i class="far fa-star"></i>';
+    }
+    return stars;
+}
+
+function formatPrice(price) {
+    return price.toLocaleString('fa-IR');
+}
+
+// Enhanced notification system
 function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
+
     // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.innerHTML = `
         <div class="notification-content">
-            <span>${message}</span>
-            <button onclick="this.parentElement.parentElement.remove()">×</button>
+            <div class="notification-icon">
+                <i class="${getNotificationIcon(type)}"></i>
+            </div>
+            <span class="notification-message">${message}</span>
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
     `;
     
@@ -606,39 +699,55 @@ function showNotification(message, type = 'info') {
         background: ${getNotificationColor(type)};
         color: white;
         padding: 1rem 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         z-index: 3000;
         max-width: 400px;
-        animation: slideIn 0.3s ease;
-        font-family: Tanha, sans-serif;
+        animation: slideInNotification 0.3s ease;
+        font-family: 'Tanha', sans-serif;
+        border: 1px solid rgba(255,255,255,0.2);
     `;
     
     // Add to page
     document.body.appendChild(notification);
     
-    // Auto remove after 3 seconds
+    // Auto remove after 4 seconds
     setTimeout(() => {
         if (notification.parentElement) {
-            notification.remove();
+            notification.style.animation = 'slideOutNotification 0.3s ease';
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 300);
         }
-    }, 3000);
+    }, 4000);
+}
+
+function getNotificationIcon(type) {
+    const icons = {
+        'success': 'fas fa-check-circle',
+        'warning': 'fas fa-exclamation-triangle',
+        'error': 'fas fa-times-circle',
+        'info': 'fas fa-info-circle'
+    };
+    return icons[type] || icons.info;
 }
 
 function getNotificationColor(type) {
     const colors = {
-        'success': '#28a745',
-        'warning': '#ffc107',
-        'error': '#dc3545',
-        'info': '#17a2b8'
+        'success': 'linear-gradient(135deg, #28a745, #20c997)',
+        'warning': 'linear-gradient(135deg, #ffc107, #fd7e14)',
+        'error': 'linear-gradient(135deg, #dc3545, #e83e8c)',
+        'info': 'linear-gradient(135deg, #17a2b8, #31a9cc)'
     };
     return colors[type] || colors.info;
 }
 
-// Add CSS animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
+// Add enhanced CSS animations
+const enhancedStyles = document.createElement('style');
+enhancedStyles.textContent = `
+    @keyframes slideInNotification {
         from {
             transform: translateX(-100%);
             opacity: 0;
@@ -649,36 +758,118 @@ style.textContent = `
         }
     }
     
+    @keyframes slideOutNotification {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+    }
+    
     .notification-content {
         display: flex;
-        justify-content: space-between;
         align-items: center;
         gap: 1rem;
     }
     
-    .notification-content button {
+    .notification-icon {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+    
+    .notification-message {
+        flex: 1;
+        font-weight: 500;
+    }
+    
+    .notification-close {
         background: none;
         border: none;
         color: white;
-        font-size: 1.2rem;
+        font-size: 1rem;
         cursor: pointer;
-        padding: 0;
-        width: 20px;
-        height: 20px;
+        padding: 0.2rem;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
+        transition: background-color 0.3s ease;
     }
     
-    .notification-content button:hover {
-        opacity: 0.8;
+    .notification-close:hover {
+        background-color: rgba(255,255,255,0.2);
+    }
+    
+    .search-btn.searching {
+        animation: pulse 1s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    
+    .search-input-group.focused {
+        box-shadow: 0 4px 16px rgba(49, 169, 204, 0.3);
+        transform: translateY(-1px);
+    }
+    
+    .active-filter-tag {
+        animation: slideUp 0.3s ease;
+    }
+    
+    .grid-cart {
+        animation: fadeIn 0.5s ease;
+    }
+    
+    .no-products {
+        animation: fadeIn 0.5s ease;
+    }
+    
+    .no-products .clear-filters-btn {
+        margin-top: 1rem;
+        background: linear-gradient(135deg, #31a9cc, #5c48ee);
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: 'Tanha', sans-serif;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .no-products .clear-filters-btn:hover {
+        background: linear-gradient(135deg, #0f1e6a, #31a9cc);
+        transform: translateY(-1px);
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(enhancedStyles);
 
 // Export functions for global access
 window.performSearch = performSearch;
 window.applyFilters = applyFilters;
 window.clearFilters = clearFilters;
 window.toggleAdvancedFilters = toggleAdvancedFilters;
-window.removeFilter = removeFilter; 
+window.removeFilter = removeFilter;
+window.quickView = function(productId) {
+    console.log('Quick view for product:', productId);
+    showNotification('نمایش سریع محصول', 'info');
+};
+window.addToWishlist = function(productId) {
+    console.log('Add to wishlist:', productId);
+    showNotification('محصول به لیست علاقه‌مندی‌ها اضافه شد', 'success');
+};
+window.addToCompare = function(productId) {
+    console.log('Add to compare:', productId);
+    showNotification('محصول به لیست مقایسه اضافه شد', 'info');
+};
+window.addToCart = function(productId) {
+    console.log('Add to cart:', productId);
+    showNotification('محصول به سبد خرید اضافه شد', 'success');
+};

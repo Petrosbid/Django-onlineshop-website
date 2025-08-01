@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+    {% csrf_token %}
     <!-- Breadcrumb -->
     <div class="breadcrumb">
         <div class="container">
@@ -24,7 +25,7 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <div class="container">
+        <div class="container" data-product-id="{{ product.id }}">
             <!-- Product Section -->
             <section class="product-section">
                 <!-- Product Images -->
@@ -107,10 +108,6 @@
                         <button class="btn-primary" onclick="addToCart()">
                             <i class="fas fa-shopping-cart"></i>
                             افزودن به سبد خرید
-                        </button>
-                        <button class="btn-secondary" onclick="addToWishlist()">
-                            <i class="far fa-heart"></i>
-                            افزودن به علاقه‌مندی‌ها
                         </button>
                     </div>
 

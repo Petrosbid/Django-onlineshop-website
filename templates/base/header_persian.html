@@ -8,7 +8,7 @@
             <nav class="nav">
                 <ul>
                     <li><a href="{% url 'index' %}">صفحه اصلی</a></li>
-                    <li><a href="{% url 'Product:Show_products' %}">فروشگاه</a></li>
+                    <li><a href="/Product/">فروشگاه</a></li>
                     <li><a href="{% url 'contact' %}">ارتباط با ما</a></li>
                     <li><a href="{% url 'about' %}">درباره ما</a></li>
                 </ul>
@@ -22,8 +22,12 @@
                 <div class="user-section">
                     {% if user.is_authenticated %}
                         <div class="cart-icon">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-count">3</span>
+                           <a href="{% url 'Account:usercart' %}"><i class="fas fa-shopping-cart"></i></a>
+                            {% if user.cart %}
+                                <span class="cart-count">{{ user.cart.total_items }}</span>
+                            {% else %}
+                                 <span class="cart-count">0</span>
+                            {%endif%}
                         </div>
                         <div class="user-menu">
                             <div class="user-info">
@@ -31,7 +35,7 @@
                                 <span>{{ user.first_name|default:user.username }}</span>
                             </div>
                             <div class="user-dropdown">
-                                <a href="{% url 'userdashboard' %}">پنل کاربری</a>
+                                <a href="{% url 'Account:userdashboard' %}">پنل کاربری</a>
                                 <a href="{% url 'logout' %}">خروج</a>
                             </div>
                         </div>

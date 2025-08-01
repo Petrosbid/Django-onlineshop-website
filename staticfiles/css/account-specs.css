@@ -13,6 +13,36 @@
     TEXT-ALIGN: center;
 }
 
+/* Messages styling */
+.messages-container {
+    margin-bottom: 2rem;
+}
+
+.message {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.message.success {
+    background-color: #f0fff4;
+    color: #2ed573;
+    border: 1px solid #2ed573;
+}
+
+.message.error {
+    background-color: #fff3f3;
+    color: #ff4757;
+    border: 1px solid #ff4757;
+}
+
+.message.warning {
+    background-color: #fffbf0;
+    color: #ffa502;
+    border: 1px solid #ffa502;
+}
+
 .form-section {
     margin-bottom: 2.5rem;
     padding-bottom: 2rem;
@@ -102,6 +132,77 @@
     font-size: 1rem;
 }
 
+.address-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.address-actions button {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-set-default {
+    color: #ffa502;
+}
+
+.btn-set-default:hover {
+    background-color: #fff3cd;
+}
+
+.btn-edit {
+    color: var(--primary-color);
+}
+
+.btn-edit:hover {
+    background-color: #e3f2fd;
+}
+
+.btn-delete {
+    color: #ff4757;
+}
+
+.btn-delete:hover {
+    background-color: #ffe6e6;
+}
+
+.btn-cancel-add {
+    color: #6c757d;
+}
+
+.btn-cancel-add:hover {
+    background-color: #f8f9fa;
+}
+
+.address-display {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.address-display p {
+    margin: 0.5rem 0;
+    color: var(--text-color);
+}
+
+.address-display p strong {
+    color: var(--primary-color);
+}
+
+.no-addresses {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #dee2e6;
+}
+
 /* New styles for address form layout */
 .address-card .form-grid {
     display: grid;
@@ -143,6 +244,44 @@
 .address-card .form-group textarea {
     padding: 0.5rem;
     font-size: 0.9rem;
+}
+
+.address-form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    justify-content: flex-end;
+}
+
+.address-form-actions button {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-family: 'Vazir', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-save-address,
+.btn-save-new-address {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.btn-save-address:hover,
+.btn-save-new-address:hover {
+    background: var(--secondary-color);
+}
+
+.btn-cancel-edit {
+    background: #f8f9fa;
+    color: var(--text-color);
+    border: 1px solid #ddd;
+}
+
+.btn-cancel-edit:hover {
+    background: #e9ecef;
 }
 
 /* Add Address Button */
@@ -193,6 +332,11 @@
     background: var(--secondary-color);
 }
 
+.btn-save:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
 .btn-cancel {
     background: #f8f9fa;
     color: var(--text-color);
@@ -213,13 +357,34 @@
         grid-template-columns: 1fr;
     }
 
+    .address-card .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .address-card .form-group.address-field {
+        grid-column: span 1;
+    }
+
+    .address-card .form-group.postal-code {
+        grid-column: span 1;
+    }
+
     .form-actions {
+        flex-direction: column;
+    }
+
+    .address-form-actions {
         flex-direction: column;
     }
 
     .btn-save,
     .btn-cancel {
         width: 100%;
+    }
+
+    .address-actions {
+        flex-direction: column;
+        gap: 0.25rem;
     }
 }
 

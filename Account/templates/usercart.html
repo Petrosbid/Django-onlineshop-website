@@ -1,0 +1,69 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load cart_filters %}
+
+{% block title %}سبد خرید | فروشگاه لوازم جانبی موبایل{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/usercart.css' %}">
+{% endblock %}
+{% block content %}
+    <aside class="sidebar">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h3>سلام، {{ user.first_name|default:user.username }} عزیز</h3>
+            </div>
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="active"><a href="{% url 'Account:usercart' %}"><i class="fas fa-shopping-cart"></i>سبد خرید</a></li>
+                    <li><a href="{% url 'Account:userdashboard' %}"><i class="fas fa-home"></i>  سفارش‌های من</a></li>
+                    <li><a href="{% url 'Account:userdetails' %}"><i class="fas fa-address-card"></i>  مشخصات</a></li>
+                    <li><a href="{% url 'Account:logout' %}"><i class="fas fa-sign-out-alt"></i> خروج</a></li>
+
+                </ul>
+            </nav>
+        </aside>
+<div class="cart-container">
+
+    <h2>سبد خرید شما</h2>
+    
+    {% if cart_items %}
+        <div id="cart-items">
+            {% for item in cart_items %}
+                <div class="cart-item" data-item-id="{{ item.id }}">
+                    {% if item.product.images.exists %}
+                        <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.title }}" class="cart-item-img">
+                    {% else %}
+                        <img src="{% static 'images/asmsung1.webp' %}" alt="{{ item.product.title }}" class="cart-item-img">
+                    {% endif %}
+                    <div class="cart-item-details">
+                        <span class="cart-item-title">{{ item.product.title }}</span>
+                        <span class="cart-item-price">{{ item.product.price|floatformat:0 }} تومان</span>
+                        <div class="cart-item-qty">
+                            <button class="qty-btn" onclick="decrementQty(this, {{ item.id }})">-</button>
+                            <input type="number" value="{{ item.quantity }}" min="1" class="qty-input" readonly>
+                            <button class="qty-btn" onclick="incrementQty(this, {{ item.id }})">+</button>
+                        </div>
+                        <span class="cart-item-total">{{ item.product.price|multiply:item.quantity|floatformat:0 }} تومان</span>
+                    </div>
+                    <button class="remove-btn" onclick="removeItem({{ item.id }})">حذف</button>
+                </div>
+            {% endfor %}
+        </div>
+        <div id="cart-summary">
+            <span>جمع کل:</span>
+            <span id="cart-subtotal">{{ total_amount|floatformat:0 }} تومان</span>
+            <a href="{% url 'Account:checkout' %}" id="checkout-btn" class="btn-primary">ادامه خرید</a>
+        </div>
+    {% else %}
+        <div id="empty-cart">
+            <p>سبد خرید شما خالی است.</p>
+            <a href="{% url 'index' %}" class="continue-shopping">ادامه خرید</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static 'javascript/usercart.js' %}"></script>
+{% endblock %}

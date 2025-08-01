@@ -33,5 +33,5 @@ urlpatterns = [
     path('login/' , views.loginuser , name='login'),
     path('logout/' , views.logoutuser , name='logout'),
     path('signup/', views.signupuser , name='signup'),
-    path('userdashboard/',views.userdashboard , name='userdashboard'),
+    path('', include(('Account.urls', 'Account'), namespace='Account')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

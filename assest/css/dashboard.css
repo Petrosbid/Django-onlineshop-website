@@ -32,7 +32,7 @@ body {
     box-shadow: var(--card-shadow);
     padding: 2rem;
     position: fixed;
-    height: 60vh;
+    height: 65vh;
     FONT-WEIGHT: 500;
     top: 8rem;
     border-radius: 30px;
@@ -287,4 +287,48 @@ th {
     .orders-table {
         font-size: 0.9rem;
     }
+}
+
+/* Additional styles for empty states */
+.no-orders {
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+}
+
+.no-orders p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    color: white;
+    text-decoration: none;
+}
+
+/* Status styles for different order states */
+.status.shipped {
+    background: #e2e3e5;
+    color: #383d41;
+}
+
+.status.failed {
+    background: #f8d7da;
+    color: #721c24;
 }

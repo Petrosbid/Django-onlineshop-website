@@ -1,11 +1,29 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout , get_user_model
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import json
+from Account import models
+from Account.models import Cart, CartItem
+from Product.models import Product
+
+
+def header(request):
+    cart_count = 0
+    if request.user.is_authenticated:
+        try:
+            cart = Cart.objects.get(user=request.user)
+            cart_count = cart.total_items()
+        except Cart.DoesNotExist:
+            cart_count = 0
+
+    context = {
+        'cart_count': cart_count,
+    }
+    return render(request, 'header_persian.html', context)
 
 def index(request):
     context = {}
@@ -20,6 +38,7 @@ def contact(request):
     return render(request,'contactUs.html', context)
 
 def loginuser(request):
+    user = get_user_model()
     if request.user.is_authenticated:
         return redirect('index')
     
@@ -42,6 +61,7 @@ def loginuser(request):
     return render(request , 'Login.html', context)
 
 def signupuser(request):
+    User = get_user_model()
     if request.user.is_authenticated:
         return redirect('index')
     
@@ -72,8 +92,11 @@ def signupuser(request):
                 username=username,
                 email=email,
                 password=password,
-                first_name=username  # Store username as first_name for display
+                mobile_number=phone
             )
+
+            # Create an empty cart for the new user
+            Cart.objects.create(user=user)
             
             # Log the user in after successful registration
             login(request, user)
@@ -90,9 +113,3 @@ def logoutuser(request):
     logout(request)
     messages.success(request, 'شما با موفقیت خارج شدید.')
     return redirect('index')
-
-def userdashboard(request):
-    context = {}
-    return render(request , 'userdashboard.html', context)
-
-

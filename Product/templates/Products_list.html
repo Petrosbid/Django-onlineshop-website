@@ -1,5 +1,7 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load humanize %}
+{% load cart_filters %}
 
 {% block title %}فروشگاه محصولات | Volix{% endblock %}
 
@@ -10,77 +12,408 @@
 
 {% block content %}
 <div class="container">
-    <div class="header">
-        <div class="header-top">
-            <div class="header-top-right">
-                <h2>VOLIX</h2>
-                <form action="" method="get">
-                    <input type="text" name="q" placeholder="جستجو محصول">
-                    <button type="submit">جستجو محصول</button>
-                </form>
+    <!-- Enhanced Search and Filter Section -->
+    <div class="search-filter-section">
+        <div class="search-filter-container">
+            <div class="search-filter-header">
+                <h2><i class="fas fa-search"></i> جستجو و فیلتر محصولات</h2>
+                <p>محصول مورد نظر خود را به راحتی پیدا کنید</p>
             </div>
-            <div class="header-top-left">
-                <div>
-                    <a href="{% url 'login' %}" class="active">
-                        <span>ورود / ثبت نام</span>
-                        <i class="bi bi-box-arrow-in-left"></i>
-                    </a>
+            
+            <div class="search-filter-bar">
+                <!-- Main Search Section -->
+                <div class="search-section">
+                    <div class="search-input-group">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchInput" placeholder="جستجو در محصولات..." class="search-input">
+                        <button type="button" class="search-btn" onclick="performSearch()">
+                            <i class="fas fa-search"></i>
+                            جستجو
+                        </button>
+                    </div>
                 </div>
-                <div class="icon">
-                    <a href="{% url 'cart' %}">
-                        <i class="bi bi-cart2" style="font-size: 25px; color: black;"></i>
-                    </a>
+
+                <!-- Quick Filters -->
+                <div class="quick-filters">
+                    <div class="filter-group">
+                        <label for="categoryFilter">دسته‌بندی:</label>
+                        <select id="categoryFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">همه دسته‌ها</option>
+                            {% for category in categories %}
+                                <option value="{{ category.name }}" {% if category_filter == category.name %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="brandFilter">برند:</label>
+                        <select id="brandFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">همه برندها</option>
+                            {% for brand in brands %}
+                                {% if brand %}
+                                    <option value="{{ brand }}" {% if brand_filter == brand %}selected{% endif %}>
+                                        {{ brand }}
+                                    </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="priceFilter">محدوده قیمت:</label>
+                        <select id="priceFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">همه قیمت‌ها</option>
+                            <option value="0-10000000">تا ۱۰ میلیون تومان</option>
+                            <option value="10000000-30000000">۱۰ تا ۳۰ میلیون تومان</option>
+                            <option value="30000000-50000000">۳۰ تا ۵۰ میلیون تومان</option>
+                            <option value="50000000-100000000">۵۰ تا ۱۰۰ میلیون تومان</option>
+                            <option value="100000000-999999999">بالای ۱۰۰ میلیون تومان</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="sortFilter">مرتب‌سازی:</label>
+                        <select id="sortFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">پیش‌فرض</option>
+                            <option value="price-low" {% if sort_by == 'price-low' %}selected{% endif %}>ارزان‌ترین</option>
+                            <option value="price-high" {% if sort_by == 'price-high' %}selected{% endif %}>گران‌ترین</option>
+                            <option value="name-asc" {% if sort_by == 'name-asc' %}selected{% endif %}>نام (الف-ی)</option>
+                            <option value="name-desc" {% if sort_by == 'name-desc' %}selected{% endif %}>نام (ی-الف)</option>
+                            <option value="rating" {% if sort_by == 'rating' %}selected{% endif %}>بهترین امتیاز</option>
+                            <option value="discount" {% if sort_by == 'discount' %}selected{% endif %}>بیشترین تخفیف</option>
+                            <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>جدیدترین</option>
+                            <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>قدیمی‌ترین</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Filter Actions -->
+                <div class="filter-actions">
+                    <button type="button" class="clear-filters-btn" onclick="clearFilters()">
+                        <i class="fas fa-times"></i>
+                        پاک کردن فیلترها
+                    </button>
+                    <button type="button" class="advanced-filter-btn" onclick="toggleAdvancedFilters()">
+                        <i class="fas fa-sliders-h"></i>
+                        فیلترهای پیشرفته
+                    </button>
                 </div>
             </div>
-        </div>
-        <div class="header-buttom">
-            <div>
-                <input type="checkbox" id="toggle-nav" hidden>
-                <label for="toggle-nav" class="label-toggle-nav">
-                    <span class="line line-top"></span>
-                    <span class="line line-mid"></span>
-                    <span class="line line-buttom"></span>
-                </label>
+
+            <!-- Advanced Filters -->
+            <div class="advanced-filters" id="advancedFilters">
+                <div class="advanced-filters-content">
+                    <div class="advanced-filter-row">
+                        <div class="advanced-filter-group">
+                            <label>رنگ:</label>
+                            <div class="color-options">
+                                <label class="color-option">
+                                    <input type="checkbox" value="black" onchange="applyFilters()">
+                                    <span class="color-swatch" style="background-color: #000;"></span>
+                                    مشکی
+                                </label>
+                                <label class="color-option">
+                                    <input type="checkbox" value="white" onchange="applyFilters()">
+                                    <span class="color-swatch" style="background-color: #fff; border: 1px solid #ddd;"></span>
+                                    سفید
+                                </label>
+                                <label class="color-option">
+                                    <input type="checkbox" value="blue" onchange="applyFilters()">
+                                    <span class="color-swatch" style="background-color: #007bff;"></span>
+                                    آبی
+                                </label>
+                                <label class="color-option">
+                                    <input type="checkbox" value="red" onchange="applyFilters()">
+                                    <span class="color-swatch" style="background-color: #dc3545;"></span>
+                                    قرمز
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="advanced-filter-group">
+                            <label>وضعیت موجودی:</label>
+                            <div class="stock-options">
+                                <label class="stock-option">
+                                    <input type="checkbox" value="in-stock" onchange="applyFilters()">
+                                    <i class="fas fa-check-circle"></i>
+                                    موجود
+                                </label>
+                                <label class="stock-option">
+                                    <input type="checkbox" value="out-of-stock" onchange="applyFilters()">
+                                    <i class="fas fa-times-circle"></i>
+                                    ناموجود
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="advanced-filter-row">
+                        <div class="advanced-filter-group">
+                            <label>امتیاز:</label>
+                            <div class="rating-options">
+                                <label class="rating-option">
+                                    <input type="checkbox" value="5" onchange="applyFilters()">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </label>
+                                <label class="rating-option">
+                                    <input type="checkbox" value="4" onchange="applyFilters()">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    و بالاتر
+                                </label>
+                                <label class="rating-option">
+                                    <input type="checkbox" value="3" onchange="applyFilters()">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    و بالاتر
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="advanced-filter-group">
+                            <label>تخفیف:</label>
+                            <div class="discount-options">
+                                <label class="discount-option">
+                                    <input type="checkbox" value="10" onchange="applyFilters()">
+                                    <span class="discount-badge">۱۰٪</span>
+                                    و بالاتر
+                                </label>
+                                <label class="discount-option">
+                                    <input type="checkbox" value="20" onchange="applyFilters()">
+                                    <span class="discount-badge">۲۰٪</span>
+                                    و بالاتر
+                                </label>
+                                <label class="discount-option">
+                                    <input type="checkbox" value="30" onchange="applyFilters()">
+                                    <span class="discount-badge">۳۰٪</span>
+                                    و بالاتر
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>دسته بندی محصولات</div>
+
+            <!-- Search Results Summary -->
+            <div class="search-results-summary" id="searchResultsSummary">
+                <div class="results-count">
+                    <i class="fas fa-list"></i>
+                    <span id="resultsCount">{{ products.paginator.count }}</span> محصول یافت شد
+                </div>
+                <div class="active-filters" id="activeFilters">
+                    <!-- Active filters will be displayed here -->
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Product Grid -->
-    <div class="section-all">
-        <div class="section-all-top">
-            <div class="products-grid">
-                {% for product in products %}
-                <div class="grid-product">
-                    <a href="{% url 'product_detail' product.id %}">
-                        <div class="item-grid-product">
-                            <div class="img-product">
-                                {% if product.images.all %}
-                                    <img src="{{ product.images.all.0.image.url }}" alt="{{ product.title }}">
-                                {% else %}
-                                    <img src="{% static 'images/default.jpg' %}" alt="بدون تصویر">
-                                {% endif %}
-                            </div>
-                            <div class="caption-item-product">
-                                <h5 class="title-product">{{ product.title }}</h5>
-                                <div class="product-category">{{ product.category.name }}</div>
-                                <div class="product-price">
-                                    <span class="current-price">{{ product.price|intcomma }} تومان</span>
-                                    {% if product.original_price %}
-                                        <span class="original-price">{{ product.original_price|intcomma }} تومان</span>
+    <!-- Category Showcase Section -->
+    <div class="category-showcase">
+        <div class="category-header">
+            <h3><i class="fas fa-th-large"></i> دسته‌بندی محصولات</h3>
+        </div>
+        <div class="category-grid">
+            <div class="category-item">
+                <div class="category-image">
+                    <img src="{% static 'images/first1.jpg' %}" alt="گوشی موبایل">
+                </div>
+                <div class="category-info">
+                    <h4>گوشی موبایل</h4>
+                    <span class="category-count">{{ products.count }} محصول</span>
+                </div>
+            </div>
+            <div class="category-item">
+                <div class="category-image">
+                    <img src="{% static 'images/first2.jpg' %}" alt="لپ تاپ">
+                </div>
+                <div class="category-info">
+                    <h4>لپ تاپ</h4>
+                    <span class="category-count">{{ products.count }} محصول</span>
+                </div>
+            </div>
+            <div class="category-item">
+                <div class="category-image">
+                    <img src="{% static 'images/header-1.jpg' %}" alt="هندزفری">
+                </div>
+                <div class="category-info">
+                    <h4>هندزفری</h4>
+                    <span class="category-count">{{ products.count }} محصول</span>
+                </div>
+            </div>
+            <div class="category-item">
+                <div class="category-image">
+                    <img src="{% static 'images/watch9.jpg' %}" alt="ساعت هوشمند">
+                </div>
+                <div class="category-info">
+                    <h4>ساعت هوشمند</h4>
+                    <span class="category-count">{{ products.count }} محصول</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Banners -->
+    <div class="featured-banners">
+        <div class="banner-left">
+            <img src="{% static 'images/mobile1.jpg' %}" alt="پیشنهاد ویژه">
+        </div>
+        <div class="banner-right">
+            <img src="{% static 'images/first7.jpg' %}" alt="پیشنهاد ویژه">
+        </div>
+    </div>
+
+    <!-- Products Grid Section -->
+    <div class="products-section">
+        <div class="products-header">
+            <h3><i class="fas fa-shopping-bag"></i> محصولات</h3>
+            <div class="view-options">
+                <button class="view-btn active" data-view="grid">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button class="view-btn" data-view="list">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid" id="productsGrid">
+            {% for product in products %}
+            <div class="grid-cart" data-category="{{ product.category.name|default:'' }}" data-brand="{{ product.material|default:'' }}">
+                <div class="item-grid-cart">
+                    <div class="product-image-container">
+                        <div class="img-cart">
+                            {% if product.images.all %}
+                                <img src="{{ product.images.all.0.image.url }}" alt="{{ product.title }}" class="product-image">
+                            {% else %}
+                                <img src="{% static 'images/default.jpg' %}" alt="بدون تصویر" class="product-image">
+                            {% endif %}
+                        </div>
+                        <div class="product-overlay">
+                        </div>
+                        {% if product.discount_percent %}
+                        <div class="discount-label">
+                            <span>{{ product.discount_percent }}٪</span>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="caption-item-cart">
+                        <div class="product-category">
+                            <span>{{ product.category.name|default:'بدون دسته' }}</span>
+                        </div>
+                        <h5 class="title-cart">
+                            <a href="/Product/{{ product.id }}">{{ product.title }}</a>
+                        </h5>
+                        
+                        <div class="product-rating">
+                            <div class="stars">
+                                <div class="stars">
+                                {% with avg_rating=product.reviews.rating|length|default:0 %}
+                                    {% if avg_rating > 0 %}
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= avg_rating %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
                                     {% endif %}
-                                    {% if product.discount_percent %}
-                                        <span class="discount-badge">{{ product.discount_percent }}٪ تخفیف</span>
-                                    {% endif %}
+                                {% endwith %}
                                 </div>
                             </div>
+                            <span class="rating-count">({{ product.reviews.all|length|default:0 }})</span>
                         </div>
-                    </a>
+                        
+                        <div class="product-price">
+                            <span class="current-price">{{ product.price|intcomma }} تومان</span>
+                            {% if product.original_price %}
+                                <span class="original-price">{{ product.original_price|intcomma }} تومان</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="add-to-cart-btn" onclick="addToCart({{ product.id }})">
+                                <i class="fas fa-shopping-cart"></i>
+                                اضافه کردن به سبد خرید
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                {% empty %}
-                <div>محصولی یافت نشد.</div>
-                {% endfor %}
             </div>
+            {% empty %}
+            <div class="no-products">
+                <i class="fas fa-search"></i>
+                <h4>محصولی یافت نشد</h4>
+                <p>لطفاً فیلترهای خود را تغییر دهید یا محصول دیگری جستجو کنید</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if products.has_other_pages %}
+        <div class="pagination-container">
+            <div class="pagination">
+                {% if products.has_previous %}
+                    <a href="?page={{ products.previous_page_number }}" class="page-link">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                {% endif %}
+                
+                {% for num in products.paginator.page_range %}
+                    {% if products.number == num %}
+                        <span class="page-link active">{{ num }}</span>
+                    {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                        <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if products.has_next %}
+                    <a href="?page={{ products.next_page_number }}" class="page-link">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Quick View Modal -->
+<div class="quick-view-modal" id="quickViewModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>نمایش سریع محصول</h3>
+            <button class="close-modal" onclick="closeQuickView()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body" id="quickViewContent">
+            <!-- Quick view content will be loaded here -->
         </div>
     </div>
 </div>
@@ -88,4 +421,73 @@
 
 {% block extra_js %}
 <script src="{% static 'javascript/search-filter.js' %}"></script>
+<script>
+// Additional JavaScript for enhanced functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // View toggle functionality
+    const viewBtns = document.querySelectorAll('.view-btn');
+    const productsGrid = document.getElementById('productsGrid');
+    
+    viewBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            viewBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const view = this.dataset.view;
+            productsGrid.className = `products-grid ${view}-view`;
+        });
+    });
+    
+    // Initialize tooltips
+    initializeTooltips();
+});
+
+function initializeTooltips() {
+    // Add tooltip functionality to buttons
+    const tooltipElements = document.querySelectorAll('[data-tooltip]');
+    tooltipElements.forEach(element => {
+        element.addEventListener('mouseenter', showTooltip);
+        element.addEventListener('mouseleave', hideTooltip);
+    });
+}
+
+function showTooltip(event) {
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    tooltip.textContent = event.target.dataset.tooltip;
+    document.body.appendChild(tooltip);
+    
+    const rect = event.target.getBoundingClientRect();
+    tooltip.style.left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2) + 'px';
+    tooltip.style.top = rect.top - tooltip.offsetHeight - 5 + 'px';
+}
+
+function hideTooltip() {
+    const tooltip = document.querySelector('.tooltip');
+    if (tooltip) {
+        tooltip.remove();
+    }
+}
+
+function quickView(productId) {
+    // Implement quick view functionality
+    console.log('Quick view for product:', productId);
+    document.getElementById('quickViewModal').style.display = 'flex';
+}
+
+
+function addToCart(productId) {
+    // Implement add to cart functionality
+    console.log('Add to cart:', productId);
+    showNotification('محصول به سبد خرید اضافه شد', 'success');
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('quickViewModal');
+    if (event.target === modal) {
+        closeQuickView();
+    }
+});
+</script>
 {% endblock %}

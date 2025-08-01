@@ -211,27 +211,152 @@ function updatePriceDisplay() {
 }
 
 // Cart and Wishlist Functions
-function addToCart() {
-    const productData = {
-        name: 'کیف محافظ گوشی هوشمند',
-        price: 250000,
-        color: selectedColor,
-        quantity: selectedQuantity,
-        image: document.getElementById('mainImage').src
-    };
-    
-    // Simulate adding to cart
-    showNotification(`${selectedQuantity} عدد ${productData.name} به سبد خرید اضافه شد`, 'success');
-    
-    // Update cart count
-    const cartCount = document.querySelector('.cart-count');
-    if (cartCount) {
-        const currentCount = parseInt(cartCount.textContent) || 0;
-        cartCount.textContent = currentCount + selectedQuantity;
+function addToCart(event) {
+    // Check if user is logged in
+    if (!isUserLoggedIn()) {
+        showNotification('برای افزودن به سبد خرید ابتدا وارد شوید', 'warning');
+        // Redirect to login page
+        setTimeout(() => {
+            window.location.href = '/login/?next=' + encodeURIComponent(window.location.pathname);
+        }, 2000);
+        return;
     }
     
-    // Add animation to cart icon
-    animateCartIcon();
+    // Get the product ID from the page
+    const productId = getProductId();
+    const quantity = parseInt(document.getElementById('quantity').value) || 1;
+    const selectedColor = getSelectedColor();
+    
+    if (!productId) {
+        showNotification('خطا در شناسایی محصول', 'error');
+        return;
+    }
+    
+    // Show loading state
+    const button = event ? event.target : null;
+    const originalText = button ? button.innerHTML : '';
+    if (button) {
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال افزودن...';
+        button.disabled = true;
+    }
+    
+    // Prepare data for the request
+    const data = {
+        product_id: productId,
+        quantity: quantity,
+        color: selectedColor
+    };
+    
+    // Make AJAX request to add to cart
+    fetch('/Product/add-to-cart/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (response.status === 403) {
+            // User not authenticated
+            showNotification('برای افزودن به سبد خرید ابتدا وارد شوید', 'warning');
+            setTimeout(() => {
+                window.location.href = '/login/?next=' + encodeURIComponent(window.location.pathname);
+            }, 2000);
+            return response.json();
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data && data.success) {
+            showNotification(data.message, 'success');
+            
+            // Update cart count in header
+            updateCartCount(data.cart_count);
+            
+            // Add animation to cart icon
+            animateCartIcon();
+        } else if (data) {
+            showNotification(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('خطا در ارتباط با سرور', 'error');
+    })
+    .finally(() => {
+        // Reset button state
+        if (button) {
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }
+    });
+}
+
+// Helper function to check if user is logged in
+function isUserLoggedIn() {
+    // Check if there are any user-specific elements on the page
+    const userElements = document.querySelectorAll('[data-user-id], .user-menu, .logout-link');
+    return userElements.length > 0;
+}
+
+// Helper function to get product ID from the page
+function getProductId() {
+    // Try to get from data attribute
+    const productElement = document.querySelector('[data-product-id]');
+    if (productElement) {
+        return productElement.dataset.productId;
+    }
+    
+    // Try to get from URL
+    const pathParts = window.location.pathname.split('/');
+    const productIdIndex = pathParts.findIndex(part => part === 'Product') + 1;
+    if (productIdIndex < pathParts.length) {
+        return pathParts[productIdIndex];
+    }
+    
+    // Fallback - you might need to adjust this based on your URL structure
+    return null;
+}
+
+// Helper function to get selected color
+function getSelectedColor() {
+    const activeColorOption = document.querySelector('.color-option.active');
+    if (activeColorOption) {
+        return activeColorOption.dataset.color || 'default';
+    }
+    return 'default';
+}
+
+// Helper function to get CSRF token
+function getCSRFToken() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+    if (csrfToken) {
+        return csrfToken.value;
+    }
+    
+    // Try to get from cookie
+    const name = 'csrftoken';
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Helper function to update cart count in header
+function updateCartCount(count) {
+    const cartCountElements = document.querySelectorAll('.cart-count');
+    cartCountElements.forEach(element => {
+        element.textContent = count;
+    });
 }
 
 function addToWishlist() {
@@ -421,17 +546,7 @@ function addLoadingState(button) {
     };
 }
 
-// Enhanced add to cart with loading state
-function addToCartWithLoading() {
-    const button = event.target;
-    const resetButton = addLoadingState(button);
-    
-    // Simulate API call
-    setTimeout(() => {
-        addToCart();
-        resetButton();
-    }, 1000);
-}
+
 
 // Export functions for global access
 window.changeMainImage = changeMainImage;
@@ -440,6 +555,6 @@ window.closeImageModal = closeImageModal;
 window.showTab = showTab;
 window.increaseQuantity = increaseQuantity;
 window.decreaseQuantity = decreaseQuantity;
-window.addToCart = addToCartWithLoading;
+window.addToCart = addToCart;
 window.addToWishlist = addToWishlist;
 window.showAllReviews = showAllReviews; 
