@@ -730,31 +730,7 @@ body {
     opacity: 1;
 }
 
-.overlay-actions {
-    display: flex;
-    gap: 1rem;
-}
 
-.quick-view-btn, .wishlist-btn, .compare-btn {
-    background: white;
-    border: none;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: #31a9cc;
-    font-size: 1.1rem;
-}
-
-.quick-view-btn:hover, .wishlist-btn:hover, .compare-btn:hover {
-    background: #31a9cc;
-    color: white;
-    transform: scale(1.1);
-}
 
 /* Discount Label */
 .discount-label {
